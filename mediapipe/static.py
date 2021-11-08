@@ -7,30 +7,19 @@ drawingModule = mediapipe.solutions.drawing_utils
 handsModule = mediapipe.solutions.hands
 
 #  create a CSV file
-header = ['gloss', 'video_id', 'frame_id', 'WRIST_p', 'WRIST_n', 'THUMB_CMC_p', 'THUMB_CMC_n',
-          'THUMB_MCP_p', 'THUMB_MCP_n', 'THUMB_IP_p', 'THUMB_IP_n',
-          'THUMB_TIP_p', 'THUMB_TIP_n', 'INDEX_FINGER_MCP_p', 'INDEX_FINGER_MCP_n',
-          'INDEX_FINGER_PIP_p', 'INDEX_FINGER_PIP_n', 'INDEX_FINGER_DIP_p', 'INDEX_FINGER_DIP_n',
-          'INDEX_FINGER_TIP_p','INDEX_FINGER_TIP_n', 'MIDDLE_FINGER_MCP_p', 'MIDDLE_FINGER_MCP_n',
-          'MIDDLE_FINGER_PIP_p', 'MIDDLE_FINGER_PIP_n', 'MIDDLE_FINGER_DIP_p', 'MIDDLE_FINGER_DIP_n',
-          'MIDDLE_FINGER_TIP_p', 'MIDDLE_FINGER_TIP_n', 'RING_FINGER_MCP_p', 'RING_FINGER_MCP_n',
-          'RING_FINGER_PIP_p', 'RING_FINGER_PIP_n', 'RING_FINGER_DIP_p', 'RING_FINGER_DIP_n',
-          'RING_FINGER_TIP_p', 'RING_FINGER_TIP_n', 'PINKY_MCP_p', 'PINKY_MCP_n',
-          'PINKY_PIP_p', 'PINKY_PIP_n', 'PINKY_DIP_p', 'PINKY_DIP_n',
-          'PINKY_TIP_p', 'PINKY_TIP_n',
-          'WRIST_p', 'WRIST_n', 'THUMB_CMC_p', 'THUMB_CMC_n',
-          'THUMB_MCP_p', 'THUMB_MCP_n', 'THUMB_IP_p', 'THUMB_IP_n',
-          'THUMB_TIP_p', 'THUMB_TIP_n', 'INDEX_FINGER_MCP_p', 'INDEX_FINGER_MCP_n',
-          'INDEX_FINGER_PIP_p', 'INDEX_FINGER_PIP_n', 'INDEX_FINGER_DIP_p', 'INDEX_FINGER_DIP_n',
-          'INDEX_FINGER_TIP_p','INDEX_FINGER_TIP_n', 'MIDDLE_FINGER_MCP_p', 'MIDDLE_FINGER_MCP_n',
-          'MIDDLE_FINGER_PIP_p', 'MIDDLE_FINGER_PIP_n', 'MIDDLE_FINGER_DIP_p', 'MIDDLE_FINGER_DIP_n',
-          'MIDDLE_FINGER_TIP_p', 'MIDDLE_FINGER_TIP_n', 'RING_FINGER_MCP_p', 'RING_FINGER_MCP_n',
-          'RING_FINGER_PIP_p', 'RING_FINGER_PIP_n', 'RING_FINGER_DIP_p', 'RING_FINGER_DIP_n',
-          'RING_FINGER_TIP_p', 'RING_FINGER_TIP_n', 'PINKY_MCP_p', 'PINKY_MCP_n',
-          'PINKY_PIP_p', 'PINKY_PIP_n', 'PINKY_DIP_p', 'PINKY_DIP_n',
-          'PINKY_TIP_p', 'PINKY_TIP_n']
+header = ['gloss', 'video_id', 'frame_id',
+          'WRIST', 'THUMB_CMC', 'THUMB_MCP', 'THUMB_IP',
+          'THUMB_TIP', 'INDEX_FINGER_MCP', 'INDEX_FINGER_PIP', 'INDEX_FINGER_DIP',
+          'INDEX_FINGER_TIP', 'MIDDLE_FINGER_MCP', 'MIDDLE_FINGER_PIP', 'MIDDLE_FINGER_DIP',
+          'MIDDLE_FINGER_TIP', 'RING_FINGER_MCP', 'RING_FINGER_PIP', 'RING_FINGER_DIP',
+          'RING_FINGER_TIP', 'PINKY_MCP', 'PINKY_PIP', 'PINKY_DIP', 'PINKY_TIP',
+          'WRIST', 'THUMB_CMC', 'THUMB_MCP', 'THUMB_IP',
+          'THUMB_TIP', 'INDEX_FINGER_MCP', 'INDEX_FINGER_PIP', 'INDEX_FINGER_DIP',
+          'INDEX_FINGER_TIP', 'MIDDLE_FINGER_MCP', 'MIDDLE_FINGER_PIP', 'MIDDLE_FINGER_DIP',
+          'MIDDLE_FINGER_TIP', 'RING_FINGER_MCP', 'RING_FINGER_PIP', 'RING_FINGER_DIP',
+          'RING_FINGER_TIP', 'PINKY_MCP', 'PINKY_PIP', 'PINKY_DIP', 'PINKY_TIP']
 
-with open('keypoints.csv', 'w', encoding='UTF8') as f:
+with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
     writer.writerow(header)
 
@@ -94,12 +83,8 @@ with open('keypoints.csv', 'w', encoding='UTF8') as f:
                             # print(pixelCoordinatesLandmark)
                             # print(normalizedLandmark)
                             data.append(pixelCoordinatesLandmark)
-                            normalized = (normalizedLandmark.x, normalizedLandmark.y, normalizedLandmark.z)
-                            data.append(normalized)
 
-                # writer.writerow(data)
-
-                # cv2.imshow('Test image', image)
+                writer.writerow(data)
 
                 # cv2.imwrite(store_path, image)
 
