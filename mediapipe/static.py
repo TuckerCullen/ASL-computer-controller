@@ -27,7 +27,7 @@ with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints.csv', 'w', encoding='UTF8'
     root_dir = r'C:\Users\Xylon\Desktop\Data-SLR\data'
     des_dir = r'C:\Users\Xylon\Desktop\Data-SLR\keypoints'
     try:
-        if not os.path.exists(des_dir):
+       if not os.path.exists(des_dir):
             os.makedirs(des_dir)
     except OSError:
         print('Error: Creating directory of data')
@@ -42,7 +42,7 @@ with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints.csv', 'w', encoding='UTF8'
             data.append(classname)
             data.append(video_id)
 
-            name = file.split(".")[0]
+            name = file.split(".")[0] + '.' + file.split(".")[1]
             data.append(name)
 
             store_path = os.path.join(des_dir, classname)

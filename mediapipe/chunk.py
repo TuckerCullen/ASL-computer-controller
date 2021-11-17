@@ -7,14 +7,14 @@ for subdir, dirs, files in os.walk(root_dir):
     for file in files:
         video_path = os.path.join(subdir, file)
 
+        store_dir = r'C:\Users\Xylon\Desktop\Data-SLR\data'
         # construct store path
         try:
-            if not os.path.exists('data'):
-                os.makedirs('data')
+            if not os.path.exists(store_dir):
+                os.makedirs(store_dir)
         except OSError:
             print ('Error: Creating directory of data')
 
-        store_dir = r'C:\Users\Xylon\Desktop\SLR\mediapipe\data'
         parents = subdir.split("\\")
         dir_parent = parents[-1]
         store_parent_dir = os.path.join(store_dir, dir_parent)
@@ -43,7 +43,7 @@ for subdir, dirs, files in os.walk(root_dir):
             if ret and count <= 100:            # count maximum 100 (few videos cannot stop)
                 name = os.path.join(store_path, str(count) + '.jpg')
                 cv2.imwrite(name, image)
-                count += 5      # frame rate
+                count += 0.5      # frame rate
                 cap.set(1, count)
                 print('Creating...' + name)
             else:
