@@ -42,6 +42,7 @@ def get_train_test(df):                   # df = pd.read_csv("processed.csv")
     for i in range(int(len(gloss) / 70)):
         label.append(gloss_dict[gloss[i * 70]])
     y = np.array(label)
+    LABELS = [key for key in gloss_dict.keys()]
 
     X = np.array(getKeypoints(df))   # len(X) == 1284850
     X_ = np.array(X)      # X_.shape == (1284850, 84)
@@ -50,4 +51,4 @@ def get_train_test(df):                   # df = pd.read_csv("processed.csv")
 
     # train test split
     X_train, X_test, y_train, y_test = train_test_split(X_, y, test_size=0.2, random_state=42)
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, LABELS
