@@ -19,48 +19,32 @@ header = ['gloss', 'video_id', 'frame_id',
           'MIDDLE_FINGER_TIP', 'RING_FINGER_MCP', 'RING_FINGER_PIP', 'RING_FINGER_DIP',
           'RING_FINGER_TIP', 'PINKY_MCP', 'PINKY_PIP', 'PINKY_DIP', 'PINKY_TIP']
 
-with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints.csv', 'w', encoding='UTF8') as f:
+with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints_norm.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
     writer.writerow(header)
 
     # read all images in the data folder
     root_dir = r'C:\Users\Xylon\Desktop\Data-SLR\data'
-    des_dir = r'C:\Users\Xylon\Desktop\Data-SLR\keypoints'
-    try:
-       if not os.path.exists(des_dir):
-            os.makedirs(des_dir)
-    except OSError:
-        print('Error: Creating directory of data')
 
     for subdir, dirs, files in os.walk(root_dir):
         for file in files:
-            data = []
+            # data = []
+            norm = []
             image_path = os.path.join(subdir, file)
 
             classname = subdir.split("\\")[-2]
             video_id = subdir.split("\\")[-1]
-            data.append(classname)
-            data.append(video_id)
+            # data.append(classname)
+            # data.append(video_id)
+
+            norm.append(classname)
+            norm.append(video_id)
 
             name = file.split(".")[0] + '.' + file.split(".")[1]
-            data.append(name)
+            # data.append(name)
+            norm.append(name)
 
-            store_path = os.path.join(des_dir, classname)
-            try:
-                if not os.path.exists(store_path):
-                    os.makedirs(store_path)
-            except OSError:
-                print('Error: Creating directory of data')
-
-            store_path = os.path.join(store_path, video_id)
-            try:
-                if not os.path.exists(store_path):
-                    os.makedirs(store_path)
-            except OSError:
-                print('Error: Creating directory of data')
-
-            store_path = os.path.join(store_path, name + '_kp' + '.jpg')
-            print("saving keypoints for " + store_path)
+            print("saving keypoints for " + image_path)
 
             with handsModule.Hands(static_image_mode=True) as hands:
                 image = cv2.imread(image_path)
@@ -78,15 +62,11 @@ with open(r'C:\Users\Xylon\Desktop\Data-SLR\keypoints.csv', 'w', encoding='UTF8'
                             pixelCoordinatesLandmark = drawingModule._normalized_to_pixel_coordinates(normalizedLandmark.x,
                                                                                                         normalizedLandmark.y,
                                                                                                       imageWidth, imageHeight)
+                            normalized_data = (normalizedLandmark.x, normalizedLandmark.y)
+                            # data.append(pixelCoordinatesLandmark)
+                            norm.append(normalized_data)
 
-                            # print(point)
-                            # print(pixelCoordinatesLandmark)
-                            # print(normalizedLandmark)
-                            data.append(pixelCoordinatesLandmark)
-
-                writer.writerow(data)
-
-                # cv2.imwrite(store_path, image)
+                writer.writerow(norm)
 
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
