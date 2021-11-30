@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 def load_graph(model_file):
     graph = tf.Graph()
-    graph_def = tf.GraphDef()
+    graph_def = tf.compat.v1.GraphDef()
 
     with open(model_file, "rb") as f:
         graph_def.ParseFromString(f.read())
@@ -26,7 +26,7 @@ def load_graph(model_file):
 
 def read_tensor_from_image_file(frames, input_height=299, input_width=299, input_mean=0, input_std=255):
     input_name = "file_reader"
-    frames = [(tf.read_file(frame, input_name), frame) for frame in frames]
+    frames = [(tf.io.read_file(frame, input_name), frame) for frame in frames]
     decoded_frames = []
     for frame in frames:
         file_name = frame[1]
@@ -42,9 +42,9 @@ def read_tensor_from_image_file(frames, input_height=299, input_width=299, input
         decoded_frames.append(image_reader)
     float_caster = [tf.cast(image_reader, tf.float32) for image_reader in decoded_frames]
     float_caster = tf.stack(float_caster)
-    resized = tf.image.resize_bilinear(float_caster, [input_height, input_width])
+    resized = tf.compat.v1.image.resize_bilinear(float_caster, [input_height, input_width])
     normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-    sess = tf.Session()
+    sess = tf.compat.v1.Session()
     result = sess.run(normalized)
     return result
 
@@ -62,7 +62,7 @@ def predict(graph, image_tensor, input_layer, output_layer):
     output_name = "import/" + output_layer
     input_operation = graph.get_operation_by_name(input_name)
     output_operation = graph.get_operation_by_name(output_name)
-    with tf.Session(graph=graph) as sess:
+    with tf.compat.v1.Session(graph=graph) as sess:
         results = sess.run(
             output_operation.outputs[0],
             {input_operation.outputs[0]: image_tensor}
