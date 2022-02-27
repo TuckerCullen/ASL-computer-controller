@@ -1,11 +1,12 @@
 
+
 const { app, BrowserWindow } = require('electron')
 
 
 function createWindow () {
   const win = new BrowserWindow({
     width: 500,
-    height: 500,
+    height: 300,
     webPreferences: {
       nodeIntegration: true,
       // enableRemoteModule:true,
@@ -13,6 +14,7 @@ function createWindow () {
     
   })
   win.loadFile('index.html');
+  //win.loadURL("http://localhost:3000")
 }
 
 
