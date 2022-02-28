@@ -22,7 +22,6 @@ def get_data_file(file_name):
 def get_data_live(num_frames):
 	#open webcam and capture num_frames and return them
 
-
 	data_preprocessing()
 
 	return None
