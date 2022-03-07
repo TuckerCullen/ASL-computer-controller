@@ -1,5 +1,4 @@
 
-
 const { app, BrowserWindow } = require('electron')
 
 
@@ -8,7 +7,7 @@ function createWindow () {
     width: 500,
     height: 300,
     webPreferences: {
-      nodeIntegration: true,
+    nodeIntegration: true,
       // enableRemoteModule:true,
     }
     
@@ -35,5 +34,3 @@ function startWebcam(){
   // Setup webcam
   
 }
-
-
