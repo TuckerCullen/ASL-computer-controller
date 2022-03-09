@@ -35,6 +35,26 @@ body {
     border: 2px #333 solid; 
 }
 
+#button {
+    text-align: center;
+    margin-top:10px;
+    margin-bottom:10px
+}
+
+button {
+    font-family: verdana, sans-serif;
+    color:white;
+    width:75px;
+    height:25px;
+    background: #FF6633;
+    font-weight: bold;
+    border: 2px white; 
+    border-radius: 5px;
+    margin-left:10px;
+    margin-right:10px;
+    -webkit-app-region:no-frag;
+}
+
 
 #Interaction-text {
     font-family: verdana, sans-serif;
