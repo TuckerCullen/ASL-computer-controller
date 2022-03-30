@@ -12,6 +12,7 @@ function createWindow () {
     
   })
   win.loadFile('index.html');
+  win.webContents.openDevTools(); // could use opedev tools to adjustxw
   //win.loadURL("http://localhost:3000")
   win.webContents.openDevTools();
 }
