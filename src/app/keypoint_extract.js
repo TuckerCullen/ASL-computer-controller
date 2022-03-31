@@ -19,7 +19,8 @@ fetch("http://127.0.0.1:5000/receiver",
  'Accept': 'application/json'
  },
  // Strigify the payload into JSON:
- body:JSON.stringify([results.poseLandmarks, results.leftHandLandmarks, results.rightHandLandmarks])}).then(res=>{
+ //[results.poseLandmarks, results.leftHandLandmarks, results.rightHandLandmarks]
+ body:JSON.stringify(results)}).then(res=>{
  if(res.ok){
  return res.json()
  }
