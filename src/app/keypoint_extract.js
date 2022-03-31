@@ -48,8 +48,8 @@ fetch("http://127.0.0.1:5000/receiver",
  canvasCtx.globalCompositeOperation = 'source-over';
  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
                 {color: '#00FF00', lineWidth: 4});
-//  drawLandmarks(canvasCtx, results.poseLandmarks,
-//                {color: '#FF0000', lineWidth: 2});
+ drawLandmarks(canvasCtx, results.poseLandmarks,
+               {color: '#FF0000', lineWidth: 2});
  drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS,
                 {color: '#CC0000', lineWidth: 5});
  drawLandmarks(canvasCtx, results.leftHandLandmarks,

@@ -10,19 +10,19 @@ app = Flask(__name__)
 cors = CORS(app)
 
 features = []
+per_frame_feature = []
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
 def postME():
-    global features
+    global features, per_frame_feature
     data = request.get_json()
-    features = process_data(data, features)
-
+    per_frame_feature, features = process_data(data, features)
     return {
         'statusCode': 200,
     }
 
 def process_data(results, features):
-    data = [[0]]
+    data = [[0]]        ### add a id slot, only for later groupby function in pandas
     # left hand 21
     if 'leftHandLandmarks' in results:
         for data_points in results['leftHandLandmarks']:
@@ -59,7 +59,7 @@ def process_data(results, features):
     else:
         features = np.hstack((features, data))              # shape: 150 * number of frames
 
-    return features
+    return data, features
 
 
 def cleaner(data):
@@ -212,6 +212,9 @@ def cleaner(data):
 
 def get_feature():
     return cleaner(features)
+
+def get_per_frame_feature():
+    return per_frame_feature
 
 if __name__ == "__main__": 
     app.run(debug=True)
