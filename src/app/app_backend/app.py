@@ -15,6 +15,9 @@ per_frame_feature = []
 @app.route("/receiver", methods=["POST"])
 def postME():
     global features, per_frame_feature
+
+    print("HIT")
+
     data = request.get_json()
     per_frame_feature, features = process_data(data, features)
     return {
@@ -24,6 +27,7 @@ def postME():
 def process_data(results, features):
     data = [[0]]        ### add a id slot, only for later groupby function in pandas
     # left hand 21
+
     if 'leftHandLandmarks' in results:
         for data_points in results['leftHandLandmarks']:
             data.append([data_points['x']])
@@ -211,6 +215,7 @@ def cleaner(data):
     return df_list
 
 def get_feature():
+    print("feature", features)
     return cleaner(features)
 
 def get_per_frame_feature():

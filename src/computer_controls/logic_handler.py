@@ -1,15 +1,19 @@
 from calendar import c
 import torch
 from control_functions import *
-from spoter.spoter_model import SPOTER
+
 import pandas as pd
 import ast
 import numpy as np
 import json
 
+import sys
+sys.path.append('../')
 
+from app.app_backend.app import get_feature
+from ML_models.spoter.spoter.spoter_model import SPOTER
+# from ML_models.spoter.datasets.czech_slr_dataset import CzechSLRDataset
 from torch.utils.data import DataLoader
-from czech_slr_dataset import CzechSLRDataset
 
 BODY_IDENTIFIERS = [
     "nose",
@@ -180,21 +184,23 @@ def run_assistant(live = True):
 			# if (prompt == "q"):
 			# 	active = False
 			# 	break
-			action_appended = False
+			# action_appended = False
 
-			data = get_data_live(120)
+			print(get_feature())
 
-			action = get_result(model, 'mini_train.csv')
+			# data = get_data_live(120)
+
+			# action = get_result(model, 'mini_train.csv')
 
 
-			if len(action_log) == 0 or action != action_log[-1]:
-				action_log.append(action)
-				action_appended = True
+			# if len(action_log) == 0 or action != action_log[-1]:
+			# 	action_log.append(action)
+			# 	action_appended = True
 
-			if action_appended:
-				action_stream_handler(action_log)
+			# if action_appended:
+			# 	action_stream_handler(action_log)
 
-			print(action_log, action_appended)
+			# print(action_log, action_appended)
 
 
 			
