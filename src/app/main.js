@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require('electron')
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 500,
+    width: 528, // fit for 2 video , should be change to 500 then 
     height: 300,
     webPreferences: {
       nodeIntegration: true,
@@ -12,7 +12,9 @@ function createWindow () {
     
   })
   win.loadFile('index.html');
+  //win.webContents.openDevTools(); // could use opedev tools to adjust
   //win.loadURL("http://localhost:3000")
+
 }
 
 
