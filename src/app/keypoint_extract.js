@@ -9,7 +9,7 @@ var prevPoints = null;
 
 function onResults(results) {
 
-console.log(results.poseLandmarks)
+// console.log(results.poseLandmarks)
 // var multi_hand = JSON.stringify(results.multiHandLandmarks);
 // fs.writeFile('myjsonfile.json', multi_hand, 'utf8', callback);
 fetch("http://127.0.0.1:5000/receiver", 
@@ -56,7 +56,7 @@ if (results.multiHandLandmarks) {
 }
 canvasCtx.restore();
 
-if (results.multiHandLandmarks.length > 0) {
+if (results.multiHandLandmarks != null && results.multiHandLandmarks.length > 0) {
     prevPoints = results.multiHandLandmarks;
 }
 
