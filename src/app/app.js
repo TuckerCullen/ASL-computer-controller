@@ -32,7 +32,6 @@ stopBut.onclick = function(){
 
 
 // Back to origin status 
-
     document.getElementById("Status").style.background='#FF6633';
     statusText.innerText = "Not ready";
     command.style.color='#FF6633';
