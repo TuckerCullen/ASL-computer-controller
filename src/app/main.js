@@ -76,9 +76,13 @@ function createWindow () {
   })
   toggleWindow(); //Only Click the tray , win show
   win.loadFile('index.html');
+<<<<<<< HEAD
   win.resizable = false// Make the window cannot resize
  
   //win.webContents.openDevTools(); // could use opedev tools to adjust
+=======
+  win.webContents.openDevTools(); // could use opedev tools to adjust
+>>>>>>> c8d26dc (uploaded logic_handler)
   //win.loadURL("http://localhost:3000")
 
 }

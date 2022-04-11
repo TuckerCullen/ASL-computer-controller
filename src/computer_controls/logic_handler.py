@@ -1,18 +1,22 @@
 from calendar import c
 from pyexpat import model
 import torch
+<<<<<<< HEAD
 from computer_controls import control_functions
 from control_functions import *
+=======
+# from control_functions import *
+>>>>>>> c8d26dc (uploaded logic_handler)
 
 import pandas as pd
 import ast
 import numpy as np
 import json
 
-import sys
-sys.path.append('../')
+# import sys
+# sys.path.append('../')
+# sys.path.append('../../')
 
-from app.app_backend.app import get_feature
 from ML_models.spoter.spoter.spoter_model import SPOTER
 # from ML_models.spoter.datasets.czech_slr_dataset import CzechSLRDataset
 from torch.utils.data import DataLoader
@@ -79,7 +83,7 @@ def get_model(model_name, use_cached = True):
 
 			model = SPOTER(num_classes=num_classes, hidden_dim=hidden_dim)
 			# tested_model = VisionTransformer(dim=2, mlp_dim=108, num_classes=100, depth=12, heads=8)
-			model.load_state_dict(torch.load("model_checkpoints/" + model_name + ".pth"))
+			model.load_state_dict(torch.load(model_name + ".pth"))
 			model.train(False)
 			return model                
 	else:
@@ -216,29 +220,29 @@ def run_assistant(live = True):
 
 	if (live):
 		while(active):
-			# prompt = input("Type h for help, q to quit").lower()
+			prompt = input("Type h for help, q to quit").lower()
 
-			#prompt handler
-			# if (prompt == "q"):
-			# 	active = False
-			# 	break
-			# action_appended = False
+			# prompt handler
+			if (prompt == "q"):
+				active = False
+				break
+			action_appended = False
 
-			print(get_feature())
+			# print(get_feature())
 
 			# data = get_data_live(120)
 
-			# action = get_result(model, 'mini_train.csv')
+			action = get_result(model, 'mini_train.csv')
 
 
-			# if len(action_log) == 0 or action != action_log[-1]:
-			# 	action_log.append(action)
-			# 	action_appended = True
+			if len(action_log) == 0 or action != action_log[-1]:
+				action_log.append(action)
+				action_appended = True
 
-			# if action_appended:
-			# 	action_stream_handler(action_log)
+			if action_appended:
+				action_stream_handler(action_log)
 
-			# print(action_log, action_appended)
+			print(action_log, action_appended)
 
 
 			
@@ -249,4 +253,4 @@ def run_assistant(live = True):
 
 # get_result(m, 'mini_train.csv')
 
-run_assistant()
+# run_assistant()
