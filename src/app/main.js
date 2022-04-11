@@ -12,7 +12,7 @@ function createWindow () {
     
   })
   win.loadFile('index.html');
-  //win.webContents.openDevTools(); // could use opedev tools to adjust
+  win.webContents.openDevTools(); // could use opedev tools to adjust
   //win.loadURL("http://localhost:3000")
 
 }
