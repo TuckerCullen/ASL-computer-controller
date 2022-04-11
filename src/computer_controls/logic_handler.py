@@ -92,9 +92,8 @@ def get_data_file(file_name):
 #returns the data to use for evaluation from live webcam
 def get_data_live(num_frames):
 	#open webcam and capture num_frames and return them
-
-
-	# data_preprocessing()
+  
+	data_preprocessing()
 
 	return None
 

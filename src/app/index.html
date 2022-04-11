@@ -15,22 +15,21 @@
   <style>
     .container {
       position: fixed;
-      top:50px;
-      /*left:100px; hide when fit 2 video */
+      top:40px;
+      left: 25px;
+      /* hide when fit 2 video */
 
     }
-    .input_video {
-       /* display: none; Can choose one to show or not , Better choose input video show, since there is lag in output*/
-    }
+  
 
     .output_canvas {
- /* display: none; Can choose one to show or not , Better choose input video show, since there is lag in output*/
+     display: none; 
       
     }
 
     #Status {
-    width: 300px;
-    height: 50px;
+    width: 200px;
+    height: 40px;
     background: #FF6633;
     position: absolute;
     z-index: 30;
@@ -49,6 +48,7 @@
     color: white;
     font-weight: bold;
 }
+
 
 #button {
   position: fixed;
@@ -86,7 +86,6 @@ button {
 }
 
 #Interaction-text {
-
     font-family: verdana, sans-serif;
     color:#FF6633;
     font-weight: bold;
@@ -111,7 +110,7 @@ button {
     </div>
   
     <div id="InteractionText">
-      <p id="Interaction-text">Hello, what can I do for you </p>
+      <p id="Interaction-text">Hello, Sign</p>
     </div>
     <script src="./app.js"></script>
 </body>
