@@ -1,12 +1,7 @@
 from calendar import c
 from pyexpat import model
 import torch
-<<<<<<< HEAD
-from computer_controls import control_functions
-from control_functions import *
-=======
 # from control_functions import *
->>>>>>> c8d26dc (uploaded logic_handler)
 
 import pandas as pd
 import ast

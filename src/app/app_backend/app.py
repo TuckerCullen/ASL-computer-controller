@@ -40,6 +40,7 @@ def load_dataset(file_location: str):
         df["neck_X"] = [0 for _ in range(df.shape[0])]
         df["neck_Y"] = [0 for _ in range(df.shape[0])]
 
+    print("FRAMES USED: ", df.shape[0])
 
     #CHANGED TO MAKE EMPTY LABELS
     labels = [-1] * df.shape[0]
@@ -200,8 +201,7 @@ def postME():
 
     r = get_result(m, get_feature())
 
-    if (r != prev_r):
-        print("RESULT: ", r)
+    print("RESULT: ", r)
 
     prev_r = r
 
@@ -397,6 +397,7 @@ def cleaner(data):
     df['neck_Y'] = (df['leftShoulder_Y'] + df['rightShoulder_Y']) / 2
 
     df_list = df.groupby(['id']).agg(lambda x: str(list(x)))
+
     return df_list
 
 def get_feature():
