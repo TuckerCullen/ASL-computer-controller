@@ -23,7 +23,7 @@ fetch("http://127.0.0.1:5000/receiver",
  if(res.ok){
  return res.json()
  }else{
- alert("something is wrong")
+//  alert("something is wrong")
  }
  }).then(jsonResponse=>{
  
