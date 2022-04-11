@@ -21,11 +21,9 @@ fetch("http://127.0.0.1:5000/receiver",
  //[results.poseLandmarks, results.leftHandLandmarks, results.rightHandLandmarks]
  body:JSON.stringify(results)}).then(res=>{
  if(res.ok){
-     console.log("ok");
-    return res.json()
- }
- else{
-    console.log("no hand detected")
+ return res.json()
+ }else{
+//  alert("something is wrong")
  }
  }).then(jsonResponse=>{
  // Log the response data in the console

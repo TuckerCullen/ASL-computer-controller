@@ -5,9 +5,29 @@ import webbrowser
 import cv2
 import time
 
+# Keene's stuff
+import platform, warnings
+# Mac OS
+if (platform.system() == "Darwin"):
+    import osascript
+# Windows
+if (platform.system() == "Windows"):
+    from ctypes import cast, POINTER
+    from comtypes import CLSCTX_ALL
+    from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+# Linux
+if (platform.system() == "Linux"):
+    from subprocess import call
+# Input
+from pynput.keyboard import Key
+from pynput.mouse import Button
+
+from pynput.keyboard import Controller as Key_Controller
+from pynput.mouse import Controller as Mouse_Controller
+
 
 def brightness(dir="up"):
-
+    # TODO
     ...
 
 def take_picture():
@@ -51,9 +71,66 @@ def check_weather():
     url = "https://www.google.com/search?q=weather&oq=weather&aqs=chrome..69i57j0i67l2j46i20i199i263i433i465i512j69i60l2j69i61j69i60.5279j1j7&sourceid=chrome&ie=UTF-8"
     webbrowser.open_new(url)
 
+def volume(value):
+    # TODO might have to adjust for OS sensitivity
+    if (platform.system() == 'Linux'):
+        # Linux
+        call(["amixer", "-D", "pulse", "sset", "Master", str(value) + "%"])
+    elif (platform.system() == 'Darwin'):
+        # Mac OS
+        osascript.osascript("set volume output volume " + str(value))
+    elif (platform.system() == 'Windows'):
+        # Windows
+        dev = AudioUtilities.GetSpeakers()
+        interface = dev.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        volume.SetMasterVolume(value, None)
+    else:
+        warnings.warn("ERROR: OS cannot be determined")
 
+def keypress(key, mode='tap'):
+    """
+    Key press control function
+    modes = 
+        tap, immediately press and release
+        hold, simulate a key press
+        release, simulate a key release
+    """
+    keyboard = Key_Controller()
+
+    if (mode == 'tap'):
+        keyboard.press(key)
+        keyboard.release(key)
+    elif (mode == 'hold'):
+        keyboard.press(key)
+    elif (mode == 'release'):
+        keyboard.release(key)
+
+def mousepress(button, mode='tap'):
+    """
+    Mouse click control function
+    modes = 
+        tap, immediately click and release
+        hold, simulate a mouse click
+        release, simulate a mouse release
+        scroll, simulate scrolling. use button param as (dx, dy)
+        double, double click mouse button, buttom param as (key, how many times)
+    """
+    mouse = Mouse_Controller()
+    
+    if (mode == 'tap'):
+        mouse.press(button)
+        mouse.release(button)
+    elif (mode == 'hold'):
+        mouse.press(button)
+    elif (mode == 'release'):
+        mouse.release(button)
+    elif (mode == 'scroll'):
+        mouse.scroll(button[0], button[1])
+    elif (mode == 'double'):
+        mouse.click(button[0], button[1])
+# Open Application... (Set up with parameter) 
 if __name__ == "__main__":
-
     # take_picture()
     # screenshot()
     # open_browser()
