@@ -66,7 +66,7 @@ const getWindowPosition = () => {
 
 function createWindow () {
     win = new BrowserWindow({
-    width: 528, // fit for 2 video , should be change to 500 then 
+    width: 300, // fit for 2 video , should be change to 500 then 
     height: 300,
     webPreferences: {
       nodeIntegration: true,
@@ -97,7 +97,6 @@ app.whenReady().then(() => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 })
-
 
 
 

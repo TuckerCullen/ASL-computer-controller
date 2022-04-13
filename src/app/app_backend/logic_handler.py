@@ -1,7 +1,8 @@
 from calendar import c
+from glob import glob
 from pyexpat import model
 import torch
-from computer_controls import control_functions
+import control_functions
 from control_functions import *
 
 import pandas as pd
@@ -12,7 +13,7 @@ import json
 import sys
 sys.path.append('../')
 
-from app.app_backend.app import get_feature
+from app import get_feature
 from ML_models.spoter.spoter.spoter_model import SPOTER
 # from ML_models.spoter.datasets.czech_slr_dataset import CzechSLRDataset
 from torch.utils.data import DataLoader
@@ -150,19 +151,20 @@ def model_to_command(model_output):
 	global slider_state
 	key = model_output
 	if action_dic.has_key(key):
-    	input_state = action_dic[key]
+		input_state = action_dic[key]
 	if slider_dic.has_key(key):
-    	slider_state = slider_dic[key]
+		slider_state = slider_dic[key]
 
 # return commands to the front-end
-def get_commands(slider_state,input_state):
-    return slider_state, input_state
+def get_commands():
+	global input_state, slider_state
+	return "open chrome"
+	# return slider_state+input_state
 
 #processes running list of actions into corresponding functions. TODO: Use Stream optimal logic
 def action_stream_handler(action_log):
 
-	global input_state
-	global slider_state
+	global input_state,slider_state
 
 	#use state variables to keep track of relevant checks
 
@@ -176,10 +178,10 @@ def action_stream_handler(action_log):
 		control_functions.take_picture()
 
 	if slider_state == "take" and cur_action == "screenshot":
-    	control_functions.screenshot()
+		control_functions.screenshot()
 	
 	if slider_state == "check" and cur_action == "weather":
-    	control_functions.check_weather()
+		control_functions.check_weather()
 	
 	print("STATES", input_state, slider_state)
 
@@ -249,4 +251,4 @@ def run_assistant(live = True):
 
 # get_result(m, 'mini_train.csv')
 
-run_assistant()
+# run_assistant()
