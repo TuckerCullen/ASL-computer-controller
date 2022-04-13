@@ -12,7 +12,7 @@ function createTray() {
   tray = new Tray(trayicon);
   tray.setToolTip('ASL');
   tray.on('click', event => {
-    toggleWindow();
+    showWindow();
 
     // Show devtools when command clicked
     if (win.isVisible() && process.defaultApp && event.metaKey) {
@@ -28,13 +28,13 @@ function createTray() {
 
 }
 
-const toggleWindow = () => {
-  if (win.isVisible()) {
-    win.hide();
-  } else {
-    showWindow();
-  }
-};
+// const toggleWindow = () => {
+//   if (win.isVisible()) {
+//     win.hide();
+//   } else {
+//     showWindow();
+//   }
+// };
 
 const showWindow = () => {
   const position = getWindowPosition();
@@ -74,7 +74,8 @@ function createWindow () {
     },
      
   })
-  toggleWindow(); //Only Click the tray , win show
+  win.center();
+  //toggleWindow(); //Only Click the tray , win show
   win.loadFile('index.html');
   win.resizable = false// Make the window cannot resize
  
