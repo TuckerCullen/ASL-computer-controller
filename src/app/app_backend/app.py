@@ -9,6 +9,7 @@ from flask_cors import CORS
 import numpy as np
 import pandas as pd
 import logic_handler as lh
+import logging
 
 from ML_models import *
 from ML_models.spoter.spoter.spoter_model import SPOTER
@@ -452,4 +453,5 @@ def get_result(model, inputs):
 
 
 if __name__ == "__main__": 
+    logging.getLogger('werkzeug').disabled = True
     app.run(debug=True)
