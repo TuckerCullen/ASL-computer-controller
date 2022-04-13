@@ -3,7 +3,7 @@ const { app, BrowserWindow, Menu, Tray} = require('electron')
 const nativeImage = require('electron').nativeImage;
 const icon = nativeImage.createFromPath('icon@2x.png')
 const trayicon=nativeImage.createFromPath('icon.png')
-app.dock.setIcon(icon);
+// app.dock.setIcon(icon);
 
 let win = null;
 let tray = null;
@@ -74,7 +74,7 @@ function createWindow () {
     },
      
   })
-  toggleWindow(); //Only Click the tray , win show
+  // toggleWindow(); //Only Click the tray , win show
   win.loadFile('index.html');
   win.resizable = false// Make the window cannot resize
  
@@ -91,7 +91,7 @@ app.on('window-all-closed', () => {
 
 app.whenReady().then(() => {
     createWindow();
-    createTray();
+    // createTray();
   
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
