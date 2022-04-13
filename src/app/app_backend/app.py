@@ -8,6 +8,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np
 import pandas as pd
+import logging
 
 from ML_models import *
 from ML_models.spoter.spoter.spoter_model import SPOTER
@@ -40,7 +41,7 @@ def load_dataset(file_location: str):
         df["neck_X"] = [0 for _ in range(df.shape[0])]
         df["neck_Y"] = [0 for _ in range(df.shape[0])]
 
-    print("FRAMES USED: ", df.shape[0])
+    # print("FRAMES USED: ", len(df['neck_Y'].iloc[0]))
 
     #CHANGED TO MAKE EMPTY LABELS
     labels = [-1] * df.shape[0]
@@ -187,23 +188,30 @@ def get_model(model_name, use_cached = True):
 m = get_model("model1")
 prev_r = None
 
+
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
 def postME():
     global features, per_frame_feature, prev_r
+    keepGoing = True
 
     # print("H")
 
     data = request.get_json()
     per_frame_feature, features = process_data(data, features)
+    
+    if features.shape[1] > 60:
+        per_frame_feature, features = process_data(data, [])
+        keepGoing = False
 
-    # print(m)
+    # print("NUM FRAMES: ", features.shape[1])
+    if keepGoing:
+        r = get_result(m, get_feature())
 
-    r = get_result(m, get_feature())
+        if (prev_r != r):
+            print("RESULT: ", r)
 
-    print("RESULT: ", r)
-
-    prev_r = r
+        prev_r = r
 
     return {
         'statusCode': 200,
@@ -401,8 +409,9 @@ def cleaner(data):
     return df_list
 
 def get_feature():
-    # print("feature", features)
-    return cleaner(features)
+    # print("OUT", features.shape)
+    c = cleaner(features)
+    return c
 
 def get_per_frame_feature():
     return per_frame_feature
@@ -442,4 +451,5 @@ def get_result(model, inputs):
 
 
 if __name__ == "__main__": 
+    logging.getLogger('werkzeug').disabled = True
     app.run(debug=True)
