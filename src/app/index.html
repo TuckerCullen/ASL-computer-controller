@@ -13,24 +13,31 @@
 
 <body>
   <style>
+    html,body {
+    margin:0;
+    padding:0;
+}
     .container {
       position: fixed;
-      top:50px;
-      /*left:100px; hide when fit 2 video */
+      top:30px;
+      width: 100%;
+      z-index: 20;
+      /* hide when fit 2 video */
 
     }
     .input_video {
-       /* display: none; Can choose one to show or not , Better choose input video show, since there is lag in output*/
+      margin:0px;
+      padding:0; 
     }
 
     .output_canvas {
- /* display: none; Can choose one to show or not , Better choose input video show, since there is lag in output*/
+     display: none; 
       
     }
 
     #Status {
-    width: 300px;
-    height: 50px;
+    width: 200px;
+    height: 40px;
     background: #FF6633;
     position: absolute;
     z-index: 30;
@@ -42,6 +49,8 @@
     text-align: center;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    margin: 0px 0px; 
+    padding: 0px 0px
 }
 
 #Status p {
@@ -50,10 +59,12 @@
     font-weight: bold;
 }
 
+
 #button {
+  z-index: 30;
   position: fixed;
   left: 50%;
-  top:200px;
+  top:190px;
   transform: translate(-50%, -50%);
   margin-top:10px;
   margin-bottom:10px
@@ -86,7 +97,6 @@ button {
 }
 
 #Interaction-text {
-
     font-family: verdana, sans-serif;
     color:#FF6633;
     font-weight: bold;
@@ -111,7 +121,7 @@ button {
     </div>
   
     <div id="InteractionText">
-      <p id="Interaction-text">Hello, what can I do for you </p>
+      <p id="Interaction-text">Hello, Sign</p>
     </div>
     <script src="./app.js"></script>
 </body>
