@@ -27,10 +27,11 @@ start.onclick = function(){
     }).then(function (text) {
         console.log('GET response:');
         console.log(text.Prediction);
+        document.getElementById("Status").style.background='#33C2FF';
         statusText.innerText = "Ready";
-        command.style.color='#00C897';
+        command.style.color='#33C2FF';
+        stopBut.style.background='#33C2FF';
         command.innerText =text.Prediction;
-
     });
     
 
