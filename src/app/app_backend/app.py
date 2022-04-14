@@ -25,14 +25,7 @@ HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in
 
 def load_dataset(file_location: str):
 
-    # print("FILE", file_location)
-
-    # Load the dataset csv file
-
     #CHANGED TO DIRECTLY FILE_LOCATION SINCE PASSED AS PANDAS
-    # print(type(file_location))
-
-    # df = pd.read_csv(file_location, encoding="utf-8")
 
     df = file_location
 
@@ -42,7 +35,7 @@ def load_dataset(file_location: str):
         df["neck_X"] = [0 for _ in range(df.shape[0])]
         df["neck_Y"] = [0 for _ in range(df.shape[0])]
 
-    print("FRAMES USED: ", df.shape[0])
+    # print("FRAMES USED: ", df.shape[0])
 
     #CHANGED TO MAKE EMPTY LABELS
     labels = [-1] * df.shape[0]
@@ -185,28 +178,90 @@ def get_model(model_name, use_cached = True):
         return None
 
 
+def create_training_data(data, label):
 
-m = get_model("model1")
+    # header = header = ['id',
+    #       'wrist_left_X', 'wrist_left_Y',
+    #       'thumbCMC_left_X', 'thumbCMC_left_Y', 'thumbMP_left_X', 'thumbMP_left_Y', 'thumbIP_left_X', 'thumbIP_left_Y', 'thumbTip_left_X', 'thumbTip_left_Y', 
+    #       'indexMCP_left_X', 'indexMCP_left_Y', 'indexPIP_left_X', 'indexPIP_left_Y', 'indexDIP_left_X', 'indexDIP_left_Y', 'indexTip_left_X', 'indexTip_left_Y',
+    #       'middleMCP_left_X', 'middleMCP_left_Y', 'middlePIP_left_X', 'middlePIP_left_Y', 'middleDIP_left_X', 'middleDIP_left_Y', 'middleTip_left_X', 'middleTip_left_Y', 
+    #       'ringMCP_left_X', 'ringMCP_left_Y', 'ringPIP_left_X', 'ringPIP_left_Y', 'ringDIP_left_X','ringDIP_left_Y', 'ringTip_left_X', 'ringTip_left_Y',
+    #       'littleMCP_left_X', 'littleMCP_left_Y', 'littlePIP_left_X', 'littlePIP_left_Y', 'littleDIP_left_X', 'littleDIP_left_Y', 'littleTip_left_X', 'littleTip_left_Y',
+    #       'wrist_right_X', 'wrist_right_Y', 
+    #       'thumbCMC_right_X', 'thumbCMC_right_Y', 'thumbMP_right_X',  'thumbMP_right_Y', 'thumbIP_right_X', 'thumbIP_right_Y', 'thumbTip_right_X', 'thumbTip_right_Y',
+    #       'indexMCP_right_X', 'indexMCP_right_Y', 'indexPIP_right_X', 'indexPIP_right_Y', 'indexDIP_right_X', 'indexDIP_right_Y', 'indexTip_right_X', 'indexTip_right_Y',
+    #       'middleMCP_right_X', 'middleMCP_right_Y', 'middlePIP_right_X',  'middlePIP_right_Y', 'middleDIP_right_X', 'middleDIP_right_Y', 'middleTip_right_X',  'middleTip_right_Y',
+    #       'ringMCP_right_X', 'ringMCP_right_Y', 'ringPIP_right_X', 'ringPIP_right_Y', 'ringDIP_right_X', 'ringDIP_right_Y', 'ringTip_right_X', 'ringTip_right_Y',
+    #       'littleMCP_right_X', 'littleMCP_right_Y', 'littlePIP_right_X',  'littlePIP_right_Y', 'littleDIP_right_X', 'littleDIP_right_Y', 'littleTip_right_X', 'littleTip_right_Y',
+    #       'nose_X', 'nose_Y',
+    #       'leftEye_inner_X', 'leftEye_inner_Y', 'leftEye_X', 'leftEye_Y', 'leftEye_outer_X', 'leftEye_outer_Y', 
+    #       'rightEye_inner_X', 'rightEye_inner_Y', 'rightEye_X', 'rightEye_Y', 'rightEye_outer_X', 'rightEye_outer_Y',
+    #       'leftEar_X', 'leftEar_Y', 'rightEar_X', 'rightEar_Y',
+    #       'mouthLeft_X', 'mouthLeft_Y', 'mouthRight_X', 'mouthRight_Y',
+    #       'leftShoulder_X', 'leftShoulder_Y', 'rightShoulder_X', 'rightShoulder_Y',
+    #       'leftElbow_X', 'leftElbow_Y', 'rightElbow_X', 'rightElbow_Y',
+    #       'leftWrist_X', 'leftWrist_Y', 'rightWrist_X', 'rightWrist_Y',
+    #       'leftPinky_X', 'leftPinky_Y', 'rightPinky_X', 'rightPinky_Y', 'leftIndex_X', 'leftIndex_Y', 'rightIndex_X', 'rightIndex_Y', 
+    #       'leftThumb_X', 'leftThumb_Y', 'rightThumb_X', 'rightThumb_Y', 'leftHip_X', 'leftHip_Y', 'rightHip_X', 'rightHip_Y', 
+    #       'leftKnee_X', 'leftKnee_Y', 'rightKnee_X', 'rightKnee_Y', 'leftAnkle_X', 'leftAnkle_Y', 'rightAnkle_X', 'rightAnkle_Y', 
+    #       'leftHeel_X', 'leftHeel_Y', 'rightHeel_X', 'rightHeel_Y', 'leftFootIndex_X', 'leftFootIndex_Y', 'rightFootIndex_X', 'rightFootIndex_Y']
+
+    # df = pd.DataFrame(data.transpose(), columns = header)
+
+    cur_df = pd.read_csv("train.csv")
+
+    new_row = cleaner(features)
+
+    label_lookup ={"balloon": 0, "h": 1, "owe": 2, "pause": 3, "cancel": 4, "bird": 5, "violin": 6, "couch": 7, "quiet": 8, "manage": 9, "man": 10, "which": 11, "aunt": 12, "loud": 13, "end": 14, "wonder": 15, "waterfall": 16, "sketch": 17, "welcome": 18, "add": 19, "close": 20, "sign language": 21, "weather": 22, "bowl": 23, "objective": 24, "four": 25, "punish": 26, "left": 27, "document": 28, "two": 29, "aim": 30, "search": 31, "enter": 32, "right": 33, "siren": 34, "piece": 35, "tent": 36, "letter": 37, "family": 38, "scan": 39, "middle": 40, "hearing": 41, "play": 42, "seven": 43, "remove": 44, "keyboard": 45, "superman": 46, "click": 47, "ten": 48, "pride": 49, "boy": 50, "sound": 51, "message": 52, "boyfriend": 53, "every monday": 54, "drag": 55, "nine": 56, "hello": 57, "start": 58, "text": 59, "reduce": 60, "dream": 61, "bike": 62, "five": 63, "eight": 64, "cent": 65, "dark": 66, "peach": 67, "down": 68, "responsible": 69, "before": 70, "forever": 71, "later": 72, "feedback": 73, "autumn": 74, "six": 75, "bottom": 76, "tranquil": 77, "lazy": 78, "tale": 79, "spoon": 80, "golf": 81, "more": 82, "key": 83, "snake": 84, "open": 85, "bright": 86, "sour": 87, "enormous": 88, "lady": 89, "one": 90, "three": 91, "calculator": 92, "network": 93, "abdomen": 94, "meat": 95, "up": 96, "top": 97, "arizona": 98, "leak": 99}
+
+    label_index = label_lookup[label]
+
+    #store the result of features into file1.csv every 120 frames
+    new_row['label'] = label_index
+
+    combined_df = pd.concat([cur_df,new_row],ignore_index=True)
+    
+    combined_df.to_csv("train.csv")
+
+
+
+m = get_model("model2")
 prev_r = None
+
+create = True
 
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
 def postME():
-    global features, per_frame_feature, prev_r
+    global features, per_frame_feature, prev_r, create
 
-    # print("H")
+
 
     data = request.get_json()
     per_frame_feature, features = process_data(data, features)
+    current_frame_count = features.shape[1]
 
-    # print(m)
-    print(features)
+    # print("FRAME: ", current_frame_count)
 
-    r = get_result(m, get_feature())
+    if current_frame_count == 60:
+        # print("START")
+        r = get_result(m, get_feature())
+        print("RESULT: ", r)
+        prev_r = r
 
-    print("RESULT: ", r)
+        # logic_handler(r) # "DO ACTION"
 
-    prev_r = r
+        if create:
+            create_training_data(features, "four")
+            create = False
+            print("DONE CREATING")
+
+
+        #reset features
+        features = []
+        per_frame_feature, features = process_data(data, features)
+        
+       
 
     return {
         'statusCode': 200,
@@ -419,7 +474,7 @@ def get_per_frame_feature():
     return per_frame_feature
 
 
-action_lookup = {0: 'computer', 1: 'want', 2: 'play', 3: 'clothes', 4: 'tell', 5: 'now', 6: 'deaf', 7: 'many', 8: 'before', 9: 'pink', 10: 'give', 11: 'short', 12: 'graduate', 13: 'cool', 14: 'son', 15: 'kiss', 16: 'forget', 17: 'hat', 18: 'school', 19: 'purple', 20: 'drink', 21: 'apple', 22: 'table', 23: 'orange', 24: 'thursday', 25: 'basketball', 26: 'secretary', 27: 'go', 28: 'corn', 29: 'fish', 30: 'finish', 31: 'book', 32: 'yes', 33: 'white', 34: 'eat', 35: 'cook', 36: 'paint', 37: 'tall', 38: 'enjoy', 39: 'meet', 40: 'brown', 41: 'time', 42: 'woman', 43: 'cousin', 44: 'fine', 45: 'same', 46: 'yellow', 47: 'wife', 48: 'family', 49: 'all', 50: 'help', 51: 'wrong', 52: 'walk', 53: 'pizza', 54: 'decide', 55: 'wait', 56: 'no', 57: 'hearing', 58: 'but', 59: 'dark', 60: 'can', 61: 'man', 62: 'bird', 63: 'bed', 64: 'doctor', 65: 'black', 66: 'right', 67: 'shirt', 68: 'like', 69: 'cow', 70: 'medicine', 71: 'jacket', 72: 'study', 73: 'cheat', 74: 'blue', 75: 'mother', 76: 'candy', 77: 'language', 78: 'year', 79: 'thin', 80: 'what', 81: 'birthday', 82: 'chair', 83: 'accident', 84: 'letter', 85: 'thanksgiving', 86: 'who', 87: 'need', 88: 'how', 89: 'africa', 90: 'dog', 91: 'later', 92: 'bowling', 93: 'color', 94: 'paper', 95: 'change', 96: 'hot', 97: 'last', 98: 'dance', 99: 'work'}
+action_lookup = {0: 'balloon', 1: 'h', 2: 'owe', 3: 'pause', 4: 'cancel', 5: 'bird', 6: 'violin', 7: 'couch', 8: 'quiet', 9: 'manage', 10: 'man', 11: 'which', 12: 'aunt', 13: 'loud', 14: 'end', 15: 'wonder', 16: 'waterfall', 17: 'sketch', 18: 'welcome', 19: 'add', 20: 'close', 21: 'sign language', 22: 'weather', 23: 'bowl', 24: 'objective', 25: 'four', 26: 'punish', 27: 'left', 28: 'document', 29: 'two', 30: 'aim', 31: 'search', 32: 'enter', 33: 'right', 34: 'siren', 35: 'piece', 36: 'tent', 37: 'letter', 38: 'family', 39: 'scan', 40: 'middle', 41: 'hearing', 42: 'play', 43: 'seven', 44: 'remove', 45: 'keyboard', 46: 'superman', 47: 'click', 48: 'ten', 49: 'pride', 50: 'boy', 51: 'sound', 52: 'message', 53: 'boyfriend', 54: 'every monday', 55: 'drag', 56: 'nine', 57: 'hello', 58: 'start', 59: 'text', 60: 'reduce', 61: 'dream', 62: 'bike', 63: 'five', 64: 'eight', 65: 'cent', 66: 'dark', 67: 'peach', 68: 'down', 69: 'responsible', 70: 'before', 71: 'forever', 72: 'later', 73: 'feedback', 74: 'autumn', 75: 'six', 76: 'bottom', 77: 'tranquil', 78: 'lazy', 79: 'tale', 80: 'spoon', 81: 'golf', 82: 'more', 83: 'key', 84: 'snake', 85: 'open', 86: 'bright', 87: 'sour', 88: 'enormous', 89: 'lady', 90: 'one', 91: 'three', 92: 'calculator', 93: 'network', 94: 'abdomen', 95: 'meat', 96: 'up', 97: 'top', 98: 'arizona', 99: 'leak'}
 
 def get_result(model, inputs):
 
@@ -437,7 +492,19 @@ def get_result(model, inputs):
         labels = labels.to(device, dtype=torch.long)
         
         outputs = model(inputs).expand(1, -1, -1)
-        
+
+        probabilities = torch.nn.functional.softmax(outputs, dim=2)
+
+        prob_list = probabilities.detach().numpy()[0][0]
+
+        prob_gloss = {}
+        for i in range(len(prob_list)):
+            prob_gloss[action_lookup[i]] = prob_list[i]
+
+        top_k = 5    
+
+        print(sorted(prob_gloss.items(), key = lambda k: k[1], reverse = True)[0:top_k])
+
         result = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
         correct = int(labels[0][0])
 
@@ -455,3 +522,8 @@ def get_result(model, inputs):
 if __name__ == "__main__": 
     logging.getLogger('werkzeug').disabled = True
     app.run(debug=True)
+
+
+
+
+
