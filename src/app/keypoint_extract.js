@@ -136,8 +136,6 @@ function checkStablize(prev, cur) {
         console.log("STABILIZE input null")
         return true
     }
-    prev = prev[0]
-    cur = cur[0]
 
     var totalDist = 0
 
