@@ -96,6 +96,7 @@ def model_to_command(model_output):
 # return commands to the front-end
 def get_commands():
 	global input_state, slider_state
+	time.sleep(10) # 
 	control_functions.check_weather()
 	# return slider_state+input_state
 	return "check weather"

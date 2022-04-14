@@ -88,6 +88,8 @@ function onResults(results) {
     else if (if_not_stabilize) {
         console.log(if_not_stabilize)
         // start prediction
+        fetch("http://127.0.0.1:5000/predict")
+
         fetch("http://127.0.0.1:5000/sender")
         .then(function (response) {
             return response.json();
@@ -97,7 +99,7 @@ function onResults(results) {
             document.getElementById("Status").style.background='#33C2FF';
             statusText.innerText = "Ready";
             command.style.color='#33C2FF';
-            stopBut.style.background='#33C2FF';
+            startBut.style.display="none";
             command.innerText =text.Prediction;
             //recieved_prediction=true;
 
@@ -109,10 +111,10 @@ function onResults(results) {
             document.getElementById("Status").style.background='#FF6633';
             statusText.innerText = "Not Ready";
             command.style.color='#FF6633';
-            command.innerText ="Hello,Signer "; 
+            command.innerText ="Hello,Sign"; 
             startBut.style.display="block";
             console.log("test1");
-              }, 1000)
+              }, 10000)
             })
         
         if_not_stabilize=false;
