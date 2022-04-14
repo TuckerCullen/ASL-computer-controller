@@ -13,6 +13,7 @@ const startBut = document.querySelector('#start')
 const stopBut = document.querySelector('#stop')
 const statusText = document.getElementById("status-text");
 const command = document.querySelector('#Interaction-text');
+const recieved_prediction = false;
 console.log(start)
 
 
@@ -98,8 +99,10 @@ function onResults(results) {
             command.style.color='#33C2FF';
             stopBut.style.background='#33C2FF';
             command.innerText =text.Prediction;
-        }).then(function(){
-            // Back to origin status 
+            //recieved_prediction=true;
+
+            setTimeout(() => {
+                // Back to origin status 
             canvasElement.style.display="none";
             videoElement.style.display="block"; 
 
@@ -109,9 +112,14 @@ function onResults(results) {
             command.innerText ="Hello,Signer "; 
             startBut.style.display="block";
             console.log("test1");
-        })
-       if_not_stabilize=false;
-    }
+              }, 1000)
+            })
+        
+        if_not_stabilize=false;
+       }
+          
+        
+    
 
     if (results.leftHandLandmarks != null && results.leftHandLandmarks.length > 0) {
         prevPoints = results.leftHandLandmarks;
