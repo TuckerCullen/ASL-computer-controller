@@ -78,9 +78,9 @@ function createWindow () {
   win.isAlwaysOnTop();
   //toggleWindow(); //Only Click the tray , win show
   win.loadFile('index.html');
-  //win.resizable = false// Make the window cannot resize
+  win.resizable = false// Make the window cannot resize
  
-  win.webContents.openDevTools(); // could use opedev tools to adjust
+  //win.webContents.openDevTools(); // could use opedev tools to adjust
   //win.loadURL("http://localhost:3000")
 
 }

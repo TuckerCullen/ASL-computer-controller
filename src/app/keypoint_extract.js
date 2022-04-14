@@ -83,7 +83,8 @@ function onResults(results) {
         canvasCtx.restore();
         if_not_stabilize=true;
 
-    } else if (if_not_stabilize) {
+    } 
+    else if (if_not_stabilize) {
         console.log(if_not_stabilize)
         // start prediction
         fetch("http://127.0.0.1:5000/sender")
@@ -99,7 +100,15 @@ function onResults(results) {
             command.innerText =text.Prediction;
         }).then(function(){
             // Back to origin status 
-            OriginStatus();
+            canvasElement.style.display="none";
+            videoElement.style.display="block"; 
+
+            document.getElementById("Status").style.background='#FF6633';
+            statusText.innerText = "Not Ready";
+            command.style.color='#FF6633';
+            command.innerText ="Hello,Signer "; 
+            startBut.style.display="block";
+            console.log("test1");
         })
        if_not_stabilize=false;
     }
@@ -171,7 +180,10 @@ holistic.setOptions({
     camera.start();
 
 
-function OriginStatus(){
+
+
+    // START RECIEVE COMMAND 
+startBut.onclick = function(){
     holistic.onResults(onResults);
     // camera.onFrame=async () => {
     //     await holistic.send({image: videoElement});
@@ -186,12 +198,6 @@ function OriginStatus(){
     command.innerText ="Translating.... "; 
     startBut.style.display="none";
     console.log("test1");
-}
-
-    // START RECIEVE COMMAND 
-startBut.onclick = function(){
-   
-    OriginStatus();
 }
 
 
