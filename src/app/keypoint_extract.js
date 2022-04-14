@@ -6,6 +6,7 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 var prevPoints = null;
 var prevPoints_dir = null;
+var if_not_stabilize = true;
 
 
 const startBut = document.querySelector('#start')
@@ -16,14 +17,21 @@ console.log(start)
 
 
 function onResults(results) {
-    if_not_stabilize = true;
+    var checkstatus = true;
+    
     if(prevPoints_dir == 'left'){
-        if_not_stabilize = checkStablize(prevPoints, results.leftHandLandmarks);
+        checkstatus = checkStablize(prevPoints, results.leftHandLandmarks);
+        console.log(checkStablize(prevPoints, results.leftHandLandmarks))
     }else if(prevPoints_dir == 'right'){
-        if_not_stabilize = checkStablize(prevPoints, results.rightHandLandmarks);
+        checkstatus= checkStablize(prevPoints, results.rightHandLandmarks);
+        console.log(checkStablize(prevPoints, results.leftHandLandmarks))
     }
     
-    if(if_not_stabilize){
+    
+
+    
+    if(checkstatus){
+        
         // var multi_hand = JSON.stringify(results.multiHandLandmarks);
         // fs.writeFile('myjsonfile.json', multi_hand, 'utf8', callback);
         fetch("http://127.0.0.1:5000/receiver", 
@@ -73,9 +81,27 @@ function onResults(results) {
         drawLandmarks(canvasCtx, results.rightHandLandmarks,
                     {color: '#FF0000', lineWidth: 2});
         canvasCtx.restore();
-    }else{
+        if_not_stabilize=true;
+
+    } else if (if_not_stabilize) {
+        console.log(if_not_stabilize)
         // start prediction
-        fetch("http://127.0.0.1:5000/sender");
+        fetch("http://127.0.0.1:5000/sender")
+        .then(function (response) {
+            return response.json();
+        }).then(function (text) {
+            console.log('GET response:');
+            console.log(text.Prediction);
+            document.getElementById("Status").style.background='#33C2FF';
+            statusText.innerText = "Ready";
+            command.style.color='#33C2FF';
+            stopBut.style.background='#33C2FF';
+            command.innerText =text.Prediction;
+        }).then(function(){
+            // Back to origin status 
+            OriginStatus();
+        })
+       if_not_stabilize=false;
     }
 
     if (results.leftHandLandmarks != null && results.leftHandLandmarks.length > 0) {
@@ -100,7 +126,6 @@ function checkStablize(prev, cur) {
 
     const distThreshold = .1
 
-    try { 
         for (let i = 0; i < prev.length; i++) {
             var xDelta = prev[i]["x"] - cur[i]["x"]
             var yDelta = prev[i]["y"] - cur[i]["y"]
@@ -118,10 +143,7 @@ function checkStablize(prev, cur) {
 
         return true
     }
-    finally {
-        return true
-    }
-}
+  
 
 const holistic = new Holistic({locateFile: (file) => {
 return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
@@ -149,27 +171,27 @@ holistic.setOptions({
     camera.start();
 
 
-
-    // START RECIEVE COMMAND 
-startBut.onclick = function(){
-   
+function OriginStatus(){
     holistic.onResults(onResults);
     // camera.onFrame=async () => {
     //     await holistic.send({image: videoElement});
     // }
-    
-
-    videoElement.style.display="none";
+   
     canvasElement.style.display="block";
+    videoElement.style.display="none"; 
 
     document.getElementById("Status").style.background='#00C897';
-    statusText.innerText = "Wait for command";
+    statusText.innerText = "Signing";
     command.style.color='#00C897';
-    command.innerText ="Translating ..."; 
+    command.innerText ="Translating.... "; 
     startBut.style.display="none";
-    stopBut.style.display="block";
     console.log("test1");
+}
 
+    // START RECIEVE COMMAND 
+startBut.onclick = function(){
+   
+    OriginStatus();
 }
 
 
