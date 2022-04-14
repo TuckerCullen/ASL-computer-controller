@@ -5,7 +5,7 @@ const videoElement = document.getElementsByClassName('input_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 var prevPoints = null;
-
+var prevPoints_dir = null;
 
 
 const startBut = document.querySelector('#start')
@@ -16,59 +16,74 @@ console.log(start)
 
 
 function onResults(results) {
-console.log(results.poseLandmarks)
-// var multi_hand = JSON.stringify(results.multiHandLandmarks);
-// fs.writeFile('myjsonfile.json', multi_hand, 'utf8', callback);
-fetch("http://127.0.0.1:5000/receiver", 
- {
- method: 'POST',
- headers: {
- 'Content-type': 'application/json',
- 'Accept': 'application/json'
- },
- // Strigify the payload into JSON:
- //[results.poseLandmarks, results.leftHandLandmarks, results.rightHandLandmarks]
- body:JSON.stringify(results)}).then(res=>{
- if(res.ok){
-     console.log("ok");
-    return res.json()
- }
- else{
-    console.log("no hand detected")
- }
- }).then(jsonResponse=>{
- // Log the response data in the console
- console.log(jsonResponse)
- } 
- ).catch((err) => console.error(err));
+    if_not_stabilize = true;
+    if(prevPoints_dir == 'left'){
+        if_not_stabilize = checkStablize(prevPoints, results.leftHandLandmarks);
+    }else if(prevPoints_dir == 'right'){
+        if_not_stabilize = checkStablize(prevPoints, results.rightHandLandmarks);
+    }
+    
+    if(if_not_stabilize){
+        // var multi_hand = JSON.stringify(results.multiHandLandmarks);
+        // fs.writeFile('myjsonfile.json', multi_hand, 'utf8', callback);
+        fetch("http://127.0.0.1:5000/receiver", 
+        {
+        method: 'POST',
+        headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+        },
+        // Strigify the payload into JSON:
+        //[results.poseLandmarks, results.leftHandLandmarks, results.rightHandLandmarks]
+        body:JSON.stringify(results)}).then(res=>{
+        if(res.ok){
+            console.log("ok");
+            return res.json()
+        }
+        else{
+            console.log("no hand detected")
+        }
+        }).then(jsonResponse=>{
+        // Log the response data in the console
+        console.log(jsonResponse)
+        } 
+        ).catch((err) => console.error(err));
 
- canvasCtx.save();
- canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
- // Only overwrite existing pixels.
- canvasCtx.globalCompositeOperation = 'source-in';
- canvasCtx.fillStyle = '#00FF00';
- canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
- // Only overwrite missing pixels.
- canvasCtx.globalCompositeOperation = 'destination-atop';
- canvasCtx.drawImage(
-     results.image, 0, 0, canvasElement.width, canvasElement.height);
- canvasCtx.globalCompositeOperation = 'source-over';
- drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-                {color: '#00FF00', lineWidth: 4});
- drawLandmarks(canvasCtx, results.poseLandmarks,
-               {color: '#FF0000', lineWidth: 2});
- drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS,
-                {color: '#CC0000', lineWidth: 5});
- drawLandmarks(canvasCtx, results.leftHandLandmarks,
-               {color: '#00FF00', lineWidth: 2});
- drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS,
-                {color: '#00CC00', lineWidth: 5});
- drawLandmarks(canvasCtx, results.rightHandLandmarks,
-               {color: '#FF0000', lineWidth: 2});
- canvasCtx.restore();
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        // Only overwrite existing pixels.
+        canvasCtx.globalCompositeOperation = 'source-in';
+        canvasCtx.fillStyle = '#00FF00';
+        canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+        // Only overwrite missing pixels.
+        canvasCtx.globalCompositeOperation = 'destination-atop';
+        canvasCtx.drawImage(
+            results.image, 0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.globalCompositeOperation = 'source-over';
+        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
+                        {color: '#00FF00', lineWidth: 4});
+        drawLandmarks(canvasCtx, results.poseLandmarks,
+                    {color: '#FF0000', lineWidth: 2});
+        drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS,
+                        {color: '#CC0000', lineWidth: 5});
+        drawLandmarks(canvasCtx, results.leftHandLandmarks,
+                    {color: '#00FF00', lineWidth: 2});
+        drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS,
+                        {color: '#00CC00', lineWidth: 5});
+        drawLandmarks(canvasCtx, results.rightHandLandmarks,
+                    {color: '#FF0000', lineWidth: 2});
+        canvasCtx.restore();
+    }else{
+        // start prediction
+        fetch("http://127.0.0.1:5000/sender");
+    }
 
-    if (results.poseLandmarks != null && results.poseLandmarks.length > 0) {
-        prevPoints = results.poseLandmarks;
+    if (results.leftHandLandmarks != null && results.leftHandLandmarks.length > 0) {
+        prevPoints = results.leftHandLandmarks;
+        prevPoints_dir = "left";
+    }else if(results.rightHandLandmarks != null && results.rightHandLandmarks.length > 0){
+        prevPoints = results.rightHandLandmarks;
+        prevPoints_dir = "right";
     }
 }
 
@@ -97,7 +112,7 @@ function checkStablize(prev, cur) {
 
         if (totalDist < distThreshold) {
             console.log("STABILIZED");
-            return False
+            return false
         }
         console.log("DIST", totalDist);
 
@@ -144,8 +159,8 @@ startBut.onclick = function(){
     // }
     
 
-    videoElement.style.display=none;
-    canvasElement.style.display=block;
+    videoElement.style.display="none";
+    canvasElement.style.display="block";
 
     document.getElementById("Status").style.background='#00C897';
     statusText.innerText = "Wait for command";
@@ -154,25 +169,6 @@ startBut.onclick = function(){
     startBut.style.display="none";
     stopBut.style.display="block";
     console.log("test1");
-    
-    
-    // Wait for prediction result
-    
-    fetch("http://127.0.0.1:5000/sender")
-    .then(function (response) {
-        return response.json();
-    }).then(function (text) {
-        console.log('GET response:');
-        console.log(text.Prediction);
-        document.getElementById("Status").style.background='#33C2FF';
-        statusText.innerText = "Ready";
-        command.style.color='#33C2FF';
-        stopBut.style.background='#33C2FF';
-        command.innerText =text.Prediction;
-    });
-    
-
-    
 
 }
 
@@ -190,7 +186,20 @@ startBut.onclick = function(){
 stopBut.onclick = function(){
 
 // Commnad use to control system 
-
+// Wait for prediction result
+    
+fetch("http://127.0.0.1:5000/sender")
+.then(function (response) {
+    return response.json();
+}).then(function (text) {
+    console.log('GET response:');
+    console.log(text.Prediction);
+    document.getElementById("Status").style.background='#33C2FF';
+    statusText.innerText = "Ready";
+    command.style.color='#33C2FF';
+    stopBut.style.background='#33C2FF';
+    command.innerText =text.Prediction;
+});
 // Back to origin status 
     document.getElementById("Status").style.background='#FF6633';
     statusText.innerText = "Not ready";

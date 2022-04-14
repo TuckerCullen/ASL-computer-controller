@@ -165,7 +165,6 @@ cors = CORS(app)
 features = []
 per_frame_feature = []
 
-
 def get_model(model_name, use_cached = True):
 
     num_classes = 100
@@ -184,29 +183,15 @@ def get_model(model_name, use_cached = True):
         #train a new model and return it
         return None
 
-
-
 m = get_model("model1")
-prev_r = None
 
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
 def postME():
-    global features, per_frame_feature, prev_r
-
-    # print("H")
+    global features, per_frame_feature
 
     data = request.get_json()
     per_frame_feature, features = process_data(data, features)
-
-    # print(m)
-    print(features)
-
-    r = get_result(m, get_feature())
-
-    print("RESULT: ", r)
-
-    prev_r = r
 
     return {
         'statusCode': 200,
@@ -219,6 +204,11 @@ def getME():
     return jsonify(message)  
     #return lh.get_commands()
 
+@app.route("/predict", methods=["GET"])
+def start_prediction():
+    curr_action = get_result(m, get_feature())
+    lh.app_to_logic(curr_action)
+    
 
 def process_data(results, features):
     data = [[0]]        ### add a id slot, only for later groupby function in pandas
