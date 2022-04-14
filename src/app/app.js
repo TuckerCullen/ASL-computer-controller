@@ -7,12 +7,11 @@ const startBut = document.querySelector('#start')
 const stopBut = document.querySelector('#stop')
 const statusText = document.getElementById("status-text");
 const command = document.querySelector('#Interaction-text');
-console.log(start)
 
 
 
 // START RECIEVE COMMAND 
-start.onclick = function(){
+startBut.onclick = function(){
     document.getElementById("Status").style.background='#00C897';
     statusText.innerText = "Wait for command";
     command.style.color='#00C897';
