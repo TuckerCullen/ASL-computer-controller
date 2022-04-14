@@ -111,19 +111,20 @@ def action_stream_handler():
 
 	#input_states -> action that will require a future input
 	#slider_state -> action that rquires a future sliding direction
+	control_functions.check_weather()
 
-	cur_action = input_state
+	# cur_action = input_state
 
-	if slider_state == "take" and cur_action == "picture":
-		control_functions.take_picture()
+	# if slider_state == "take" and cur_action == "picture":
+	# 	control_functions.take_picture()
 
-	if slider_state == "take" and cur_action == "screenshot":
-		control_functions.screenshot()
+	# if slider_state == "take" and cur_action == "screenshot":
+	# 	control_functions.screenshot()
 	
-	if slider_state == "check" and cur_action == "weather":
-		control_functions.check_weather()
+	# if slider_state == "check" and cur_action == "weather":
+	# 	control_functions.check_weather()
 	
-	print("STATES", input_state, slider_state)
+	# print("STATES", input_state, slider_state)
 
 	# if slider_state == "brightness" and cur_action == "up":
     # 	control_functions.brightness()
