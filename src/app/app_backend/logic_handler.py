@@ -61,16 +61,12 @@ HAND_IDENTIFIERS = [
 HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in HAND_IDENTIFIERS]
 
 
-
 # from spoter.utils import evaluate
 
 # Returns the model to use for evaluation
 
 num_classes = 100
 hidden_dim = 108
-
-
-
 
 
 def get_model(model_name, use_cached = True):
@@ -87,84 +83,37 @@ def get_model(model_name, use_cached = True):
 		#train a new model and return it
 		return None
 
-#returns the data to use for evaluation from file
-def get_data_file(file_name):
 
-	#load the images/video from the file and return them
-	return None
 
-#returns the data to use for evaluation from live webcam
-def get_data_live(num_frames):
-	#open webcam and capture num_frames and return them
-  
-	data_preprocessing()
-
-	return None
 
 action_lookup = {28: "open"}
 
-#return string version of output from model
-def get_result(model, inputs):
-
-	# mini = pd.read_csv('mini_train.csv')
-
-	g = torch.Generator()
-	device = torch.device("cpu")
-
-	mini_data = CzechSLRDataset(inputs)
-	mini_loader = DataLoader(mini_data, shuffle=False, generator=g)	
-
-	for i, data in enumerate(mini_loader):
-		inputs, labels = data
-		inputs = inputs.squeeze(0).to(device)
-		labels = labels.to(device, dtype=torch.long)
-		
-		outputs = model(inputs).expand(1, -1, -1)
-		
-		result = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
-		correct = int(labels[0][0])
-
-		print("EVALUATE", result, correct)
-
-		#BREAK SO IT ONLY DOES ONE
-		break
-
-	return action_lookup[result]
-
-	
-	return
-
 
 input_state = None
-slider_state = None
-
-
 # Dictionary Mapping
 # action_dic = {"computer": 0, "want": 1, "play": 2, "clothes": 3, "tell": 4, "now": 5, "deaf": 6, "many": 7, "before": 8, "pink": 9, "give": 10, "short": 11, "graduate": 12, "cool": 13, "son": 14, "kiss": 15, "forget": 16, "hat": 17, "school": 18, "purple": 19, "drink": 20, "apple": 21, "table": 22, "orange": 23, "thursday": 24, "basketball": 25, "secretary": 26, "go": 27, "corn": 28, "fish": 29, "finish": 30, "book": 31, "yes": 32, "white": 33, "eat": 34, "cook": 35, "paint": 36, "tall": 37, "enjoy": 38, "meet": 39, "brown": 40, "time": 41, "woman": 42, "cousin": 43, "fine": 44, "same": 45, "yellow": 46, "wife": 47, "family": 48, "all": 49, "help": 50, "wrong": 51, "walk": 52, "pizza": 53, "decide": 54, "wait": 55, "no": 56, "hearing": 57, "but": 58, "dark": 59, "can": 60, "man": 61, "bird": 62, "bed": 63, "doctor": 64, "black": 65, "right": 66, "shirt": 67, "like": 68, "cow": 69, "medicine": 70, "jacket": 71, "study": 72, "cheat": 73, "blue": 74, "mother": 75, "candy": 76, "language": 77, "year": 78, "thin": 79, "what": 80, "birthday": 81, "chair": 82, "accident": 83, "letter": 84, "thanksgiving": 85, "who": 86, "need": 87, "how": 88, "africa": 89, "dog": 90, "later": 91, "bowling": 92, "color": 93, "paper": 94, "change": 95, "hot": 96, "last": 97, "dance": 98, "work": 99}
 action_dic = { 63 : "bed"}
-slider_dic = { 27 : "go"}
 
 def model_to_command(model_output):
 	# if command is in the action dic, then store into the input_state
-	# if command is in the slider state, then store into the slider_state
+	
 	global input_state
-	global slider_state
 	key = model_output
+	
 	if action_dic.has_key(key):
 		input_state = action_dic[key]
-	if slider_dic.has_key(key):
-		slider_state = slider_dic[key]
+
 
 # return commands to the front-end
 def get_commands():
-	global input_state, slider_state
+	global input_state
 	return "open chrome"
 	# return slider_state+input_state
 
 #processes running list of actions into corresponding functions. TODO: Use Stream optimal logic
 def action_stream_handler(action_log):
 
-	global input_state,slider_state
+	global input_state
 
 	#use state variables to keep track of relevant checks
 

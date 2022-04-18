@@ -3,6 +3,8 @@ import sys
 sys.path.append('../../')
 sys.path.append('../')
 
+import json 
+
 from concurrent.futures import process
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -20,6 +22,8 @@ import torch
 import torch.utils.data as torch_data
 from torch.utils.data import DataLoader
 import ast
+
+import logic_handler
 
 HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in HAND_IDENTIFIERS]
 
@@ -150,6 +154,8 @@ class CzechSLRDataset(torch_data.Dataset):
     def __len__(self):
         return len(self.labels)
 
+
+
 #Set up Flask:
 app = Flask(__name__)
 #Set up Flask to bypass CORS:
@@ -234,8 +240,7 @@ def create_training_data(data, label):
 m = get_model("model2")
 prev_r = None
 
-#CREATING TRAINING DATA: CHANGE TO TRUE
-create = True
+create = False
 
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
@@ -254,6 +259,8 @@ def postME():
         prev_r = r
 
         # logic_handler(r) # "DO ACTION"
+
+        logic_handler.model_to_command(r)
 
         if create:
             #CHANGE TO LABEL YOU WANT TO MAKE
