@@ -23,7 +23,6 @@ import torch.utils.data as torch_data
 from torch.utils.data import DataLoader
 import ast
 
-import logic_handler
 
 HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in HAND_IDENTIFIERS]
 
@@ -236,9 +235,8 @@ def create_training_data(data, label):
     # new_row.to_csv("train.csv")
 
 
-
-m = get_model("model2")
-prev_r = None
+model = get_model("model2")
+prev_gloss = None
 
 create = False
 
@@ -254,13 +252,12 @@ def postME():
     # print("FRAME: ", current_frame_count)
 
     if current_frame_count == 60:
-        r = get_result(m, get_feature())
-        print("RESULT: ", r)
-        prev_r = r
+        gloss, result = get_result(model, get_feature())
+        print("RESULT: ", result)
+        print("GLOSS: ", gloss)
+        prev_gloss = gloss
 
-        # logic_handler(r) # "DO ACTION"
-
-        logic_handler.model_to_command(r)
+        logic_handler.model_to_command(result)
 
         if create:
             #CHANGE TO LABEL YOU WANT TO MAKE
@@ -268,12 +265,9 @@ def postME():
             create = False
             print("DONE CREATING")
 
-
         #reset features
         features = []
         per_frame_feature, features = process_data(data, features)
-        
-       
 
     return {
         'statusCode': 200,
@@ -526,13 +520,17 @@ def get_result(model, inputs):
         break
     
     if result in action_lookup:
-        return action_lookup[result]
+        gloss = action_lookup[result]
+        return gloss, result
     else:
         return "NO_ACTION"
 
 
 if __name__ == "__main__": 
     logging.getLogger('werkzeug').disabled = True
+
+    logic_handler = lh.LogicHandler()
+
     app.run(debug=True)
 
 
