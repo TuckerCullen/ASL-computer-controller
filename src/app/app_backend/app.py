@@ -23,6 +23,7 @@ import torch.utils.data as torch_data
 from torch.utils.data import DataLoader
 import ast
 
+##################################### DATASET LOADING ##########################################################################
 
 HAND_IDENTIFIERS = [id + "_0" for id in HAND_IDENTIFIERS] + [id + "_1" for id in HAND_IDENTIFIERS]
 
@@ -75,6 +76,10 @@ def dictionary_to_tensor(landmarks_dict: dict) -> torch.Tensor:
         output[:, landmark_index, 1] = [frame[1] for frame in landmarks_dict[identifier]]
 
     return torch.from_numpy(output)
+
+
+######################################### SPOTR MODEL SETUP ##############################################################################################
+# eventually should move this back to its own file 
 
 
 class CzechSLRDataset(torch_data.Dataset):
@@ -155,16 +160,10 @@ class CzechSLRDataset(torch_data.Dataset):
 
 
 
-#Set up Flask:
-app = Flask(__name__)
-#Set up Flask to bypass CORS:
-cors = CORS(app)
-
-features = []
-per_frame_feature = []
-
-
 def get_model(model_name, use_cached = True):
+    """ 
+    setting up and istance of the SPOTR model 
+    """
 
     num_classes = 100
     hidden_dim = 108
@@ -182,6 +181,7 @@ def get_model(model_name, use_cached = True):
         #train a new model and return it
         return None
 
+################################# CREATING NEW TRAINING DATA ########################################## 
 
 def create_training_data(data, label):
 
@@ -235,51 +235,7 @@ def create_training_data(data, label):
     # new_row.to_csv("train.csv")
 
 
-model = get_model("model2")
-prev_gloss = None
-
-create = False
-
-#Create the receiver API POST endpoint:
-@app.route("/receiver", methods=["POST"])
-def postME():
-    global features, per_frame_feature, prev_r, create
-
-    data = request.get_json()
-    per_frame_feature, features = process_data(data, features)
-    current_frame_count = features.shape[1]
-
-    # print("FRAME: ", current_frame_count)
-
-    if current_frame_count == 60:
-        gloss, result = get_result(model, get_feature())
-        print("RESULT: ", result)
-        print("GLOSS: ", gloss)
-        prev_gloss = gloss
-
-        logic_handler.model_to_command(result)
-
-        if create:
-            #CHANGE TO LABEL YOU WANT TO MAKE
-            create_training_data(features, "hello")
-            create = False
-            print("DONE CREATING")
-
-        #reset features
-        features = []
-        per_frame_feature, features = process_data(data, features)
-
-    return {
-        'statusCode': 200,
-    }
-
-@app.route("/sender",methods=["GET"])
-def getME():
-    print("test111")
-    message = {'Prediction': lh.get_commands()}
-    return jsonify(message)  
-    #return lh.get_commands()
-
+########################## FEATURE/KEYPOINT EXTRACTION AND PROCESSING FUNCTIONS #################################################################
 
 def process_data(results, features):
     data = [[0]]        ### add a id slot, only for later groupby function in pandas
@@ -479,10 +435,13 @@ def get_feature():
 def get_per_frame_feature():
     return per_frame_feature
 
+################################## RUNNING THE APP and COMMUNICATING WITH FRONTEND #####################################################################
 
-action_lookup = {0: 'balloon', 1: 'h', 2: 'owe', 3: 'pause', 4: 'cancel', 5: 'bird', 6: 'violin', 7: 'couch', 8: 'quiet', 9: 'manage', 10: 'man', 11: 'which', 12: 'aunt', 13: 'loud', 14: 'end', 15: 'wonder', 16: 'waterfall', 17: 'sketch', 18: 'welcome', 19: 'add', 20: 'close', 21: 'sign language', 22: 'weather', 23: 'bowl', 24: 'objective', 25: 'four', 26: 'punish', 27: 'left', 28: 'document', 29: 'two', 30: 'aim', 31: 'search', 32: 'enter', 33: 'right', 34: 'siren', 35: 'piece', 36: 'tent', 37: 'letter', 38: 'family', 39: 'scan', 40: 'middle', 41: 'hearing', 42: 'play', 43: 'seven', 44: 'remove', 45: 'keyboard', 46: 'superman', 47: 'click', 48: 'ten', 49: 'pride', 50: 'boy', 51: 'sound', 52: 'message', 53: 'boyfriend', 54: 'every monday', 55: 'drag', 56: 'nine', 57: 'hello', 58: 'start', 59: 'text', 60: 'reduce', 61: 'dream', 62: 'bike', 63: 'five', 64: 'eight', 65: 'cent', 66: 'dark', 67: 'peach', 68: 'down', 69: 'responsible', 70: 'before', 71: 'forever', 72: 'later', 73: 'feedback', 74: 'autumn', 75: 'six', 76: 'bottom', 77: 'tranquil', 78: 'lazy', 79: 'tale', 80: 'spoon', 81: 'golf', 82: 'more', 83: 'key', 84: 'snake', 85: 'open', 86: 'bright', 87: 'sour', 88: 'enormous', 89: 'lady', 90: 'one', 91: 'three', 92: 'calculator', 93: 'network', 94: 'abdomen', 95: 'meat', 96: 'up', 97: 'top', 98: 'arizona', 99: 'leak'}
 
 def get_result(model, inputs):
+    """
+    Outputs the top "k" most likely classes (signs) given real-time keypoint data from webcam. 
+    """
 
     g = torch.Generator()
 
@@ -499,38 +458,71 @@ def get_result(model, inputs):
         
         outputs = model(inputs).expand(1, -1, -1)
 
+        # softmax to get probabilities 
         probabilities = torch.nn.functional.softmax(outputs, dim=2)
 
-        prob_list = probabilities.detach().numpy()[0][0]
+        # save the top K results 
+        top_k = 5 
+        result = torch.topk(probabilities,top_k)[1]
 
-        prob_gloss = {}
-        for i in range(len(prob_list)):
-            prob_gloss[action_lookup[i]] = prob_list[i]
+        return result # return top 5 classes 
 
-        top_k = 5    
+# ---------------- SETUP STEPS ------------------
+#TODO: this should probably be cleaned-up, maybe moved to top of file or main? 
 
-        print(sorted(prob_gloss.items(), key = lambda k: k[1], reverse = True)[0:top_k])
+#Set up Flask:
+app = Flask(__name__)
+#Set up Flask to bypass CORS:
+cors = CORS(app)
 
-        result = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
-        correct = int(labels[0][0])
+features = []
+per_frame_feature = []
 
-        # print("NUMERIC EVAL: ", result)
+model = get_model("checkpoint_t_9")
+prev_gloss = None
 
-        #BREAK SO IT ONLY DOES ONE
-        break
-    
-    if result in action_lookup:
-        gloss = action_lookup[result]
-        return gloss, result
-    else:
-        return "NO_ACTION"
+create = False
+# ------------------------------------------------
 
+#Create the receiver API POST endpoint:
+@app.route("/receiver", methods=["POST","GET"])
+def postME():
+    global features, per_frame_feature
+
+    if request.method=="POST":
+        data = request.get_json()
+        per_frame_feature, features = process_data(data, features)
+
+    if request.method =="GET":
+
+        # get list of top 5 most likely classes (list of ints)
+        result = get_result(model, get_feature()).tolist()[0][0]
+        
+        print("RESULTS: ", result)
+
+        # send results to logic handler to call proper control func 
+        logic_handler.model_to_command(result)
+        
+        #reset features
+        features = []
+        
+        # get action back from logic handler to send back to frontend 
+        message = {'Prediction': logic_handler.get_commands()}
+        print(logic_handler.get_commands())
+
+        return jsonify(message)  
+        
+    return {
+        'statusCode': 200,
+    }
+        
 
 if __name__ == "__main__": 
+    
     logging.getLogger('werkzeug').disabled = True
 
     logic_handler = lh.LogicHandler()
-
+    
     app.run(debug=True)
 
 

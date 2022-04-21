@@ -3,10 +3,10 @@ import control_functions
 from control_functions import *
 
 ACTION_LOOKUP = {
-	29: "Check Weather", 
-	25 : "Take Screenshot",
-	2 : "Take Picture", 
-	3 : "Open Browser"
+	22: "Check Weather", 
+	25 : "Take Screenshot", #actually sign for number 4
+	29 : "Take Picture", # actually the sign for number 2
+	31 : "Open Browser" 
 }
 
 class LogicHandler:
@@ -17,19 +17,20 @@ class LogicHandler:
 		self.action_log = []
 
 
-	def model_to_command(self, model_result: int):
+	def model_to_command(self, model_result: list):
 		"""
 		Called in app.py to pass model output to logic handler. 
 		
 		Checks to see if the result of the model is an action, and calls action_stream_handler to process action
 		"""
-		gloss = model_result
-		
-		if gloss in ACTION_LOOKUP:
-			self.input_state = ACTION_LOOKUP[gloss] 
-			print("INPUT STATE: ", self.input_state)
-
-			self.action_stream_handler(self.action_log)
+		#gloss = model_result
+		self.input_state = None
+		for label in model_result:
+			if label in ACTION_LOOKUP:
+				self.input_state = ACTION_LOOKUP[label] 
+				print("INPUT STATE: ", self.input_state)
+				self.action_stream_handler(self.action_log)
+				break
 
 
 	#processes running list of actions into corresponding functions. TODO: Use Stream optimal logic
@@ -54,4 +55,7 @@ class LogicHandler:
 
 		action_log.append(cur_action)
 	
+	def get_commands(self):
+		# return slider_state+input_state
+		return self.input_state
 
