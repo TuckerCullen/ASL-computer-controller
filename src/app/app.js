@@ -136,7 +136,7 @@ stopBut.onclick = function(){
      method: 'GET',
      })
 
-    fetch("http://127.0.0.1:5000/sender")
+    // fetch("http://127.0.0.1:5000/sender")
     .then(function (response) {
         return response.json();
     }).then(function (text) {
@@ -159,7 +159,7 @@ stopBut.onclick = function(){
     stopBut.style.display="none";
     startBut.style.display="block";
     console.log("test1");
-      }, 2500)
+      }, 5000)
     
 }
 
