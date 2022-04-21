@@ -4,14 +4,10 @@ from control_functions import *
 
 ACTION_LOOKUP = {
 	22: "Check Weather", 
-	25 : "Take Screenshot",
-	2 : "Take Picture", 
-	31 : "Open Browser"
+	25 : "Take Screenshot", #actually sign for number 4
+	29 : "Take Picture", # actually the sign for number 2
+	31 : "Open Browser" 
 }
-
-
-
-
 
 class LogicHandler:
 
