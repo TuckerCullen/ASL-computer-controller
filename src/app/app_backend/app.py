@@ -239,36 +239,25 @@ model = get_model("model2")
 prev_gloss = None
 
 create = False
-
+logic_handler = lh.LogicHandler()
 #Create the receiver API POST endpoint:
-@app.route("/receiver", methods=["POST"])
+@app.route("/receiver", methods=["POST","GET"])
 def postME():
-    global features, per_frame_feature, prev_r, create
-
-    data = request.get_json()
-    per_frame_feature, features = process_data(data, features)
-    current_frame_count = features.shape[1]
-
-    # print("FRAME: ", current_frame_count)
-
-    if current_frame_count == 60:
+    global features, per_frame_feature
+    if request.method=="POST":
+        data = request.get_json()
+        per_frame_feature, features = process_data(data, features)
+    if request.method =="GET":
         gloss, result = get_result(model, get_feature())
         print("RESULT: ", result)
         print("GLOSS: ", gloss)
-        prev_gloss = gloss
-
         logic_handler.model_to_command(result)
-
-        if create:
-            #CHANGE TO LABEL YOU WANT TO MAKE
-            create_training_data(features, "hello")
-            create = False
-            print("DONE CREATING")
-
         #reset features
         features = []
-        per_frame_feature, features = process_data(data, features)
 
+
+    # print("FRAME: ", current_frame_count)
+        
     return {
         'statusCode': 200,
     }
@@ -276,9 +265,17 @@ def postME():
 @app.route("/sender",methods=["GET"])
 def getME():
     print("test111")
-    message = {'Prediction': lh.get_commands()}
+    message = {'Prediction': logic_handler.get_commands()}
     return jsonify(message)  
     #return lh.get_commands()
+
+# @app.route("/predict", methods=["GET"])
+# def start_prediction():
+    
+
+
+
+
 
 
 def process_data(results, features):
@@ -529,7 +526,7 @@ def get_result(model, inputs):
 if __name__ == "__main__": 
     logging.getLogger('werkzeug').disabled = True
 
-    logic_handler = lh.LogicHandler()
+    
 
     app.run(debug=True)
 

@@ -54,4 +54,7 @@ class LogicHandler:
 
 		action_log.append(cur_action)
 	
+	def get_commands(self):
+		# return slider_state+input_state
+		return "check weather"
 
