@@ -237,18 +237,20 @@ prev_r = None
 #CREATING TRAINING DATA: CHANGE TO TRUE
 create = True
 
+#Check for motion
+motion_detected = False
+
+
 #Create the receiver API POST endpoint:
 @app.route("/receiver", methods=["POST"])
 def postME():
-    global features, per_frame_feature, prev_r, create
+    global features, per_frame_feature, prev_r, create, motion_detected
 
     data = request.get_json()
     per_frame_feature, features = process_data(data, features)
     current_frame_count = features.shape[1]
 
-    # print("FRAME: ", current_frame_count)
-
-    if current_frame_count == 60:
+    if current_frame_count == 100:
         r = get_result(m, get_feature())
         print("RESULT: ", r)
         prev_r = r
@@ -265,8 +267,8 @@ def postME():
         #reset features
         features = []
         per_frame_feature, features = process_data(data, features)
-        
-       
+
+    
 
     return {
         'statusCode': 200,
