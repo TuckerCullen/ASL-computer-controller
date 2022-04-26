@@ -88,10 +88,14 @@ def volume(value):
         volume.SetMasterVolume(value, None)
     else:
         warnings.warn("ERROR: OS cannot be determined")
-def volume_up(sens = 1):
-    volume(1 * sens)
-def volume_down(sens = 1):
-    volume(-1 * sens)
+def volume_handler(sens = 1):
+    # felt like doing CS61A style
+    def control(current):
+        def c(mode):
+            volume(current + mode * sens) # volume adjustment
+            return control(current + mode * sens)
+        return c
+    return control(50)
 def keypress(key, mode='tap'):
     """
     Key press control function
