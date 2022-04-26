@@ -12,7 +12,7 @@ function createTray() {
   tray = new Tray(trayicon);
   tray.setToolTip('ASL');
   tray.on('click', event => {
-    toggleWindow();
+    showWindow();
 
     // Show devtools when command clicked
     if (win.isVisible() && process.defaultApp && event.metaKey) {
@@ -28,13 +28,13 @@ function createTray() {
 
 }
 
-const toggleWindow = () => {
-  if (win.isVisible()) {
-    win.hide();
-  } else {
-    showWindow();
-  }
-};
+// const toggleWindow = () => {
+//   if (win.isVisible()) {
+//     win.hide();
+//   } else {
+//     showWindow();
+//   }
+// };
 
 const showWindow = () => {
   const position = getWindowPosition();
@@ -66,7 +66,7 @@ const getWindowPosition = () => {
 
 function createWindow () {
     win = new BrowserWindow({
-    width: 528, // fit for 2 video , should be change to 500 then 
+    width: 300, // fit for 2 video , should be change to 500 then 
     height: 300,
     webPreferences: {
       nodeIntegration: true,
@@ -74,7 +74,8 @@ function createWindow () {
     },
      
   })
-  toggleWindow(); //Only Click the tray , win show
+  win.center();
+  //toggleWindow(); //Only Click the tray , win show
   win.loadFile('index.html');
   win.resizable = false// Make the window cannot resize
  
@@ -97,7 +98,6 @@ app.whenReady().then(() => {
       if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 })
-
 
 
 
