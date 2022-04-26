@@ -32,8 +32,8 @@ def brightness(dir="up"):
 
 def take_picture():
     """
-    Opens webcam preview and takes a picture when you hit the spacebar. 
-    TODO: set this to run on timer or 1 sign to load preview and one sign to take picture 
+    Opens webcam preview and takes a picture when you hit the spacebar.
+    TODO: set this to run on timer or 1 sign to load preview and one sign to take picture
     """
     cap = cv2.VideoCapture(0)
 
@@ -64,15 +64,16 @@ def open_browser():
 
 def check_weather():
     """
-    Opens up google weather 
+    Opens up google weather
     TODO: pretty sure this just goes to berkeley weather no matter where you are, add location based lookup
     """
 
     url = "https://www.google.com/search?q=weather&oq=weather&aqs=chrome..69i57j0i67l2j46i20i199i263i433i465i512j69i60l2j69i61j69i60.5279j1j7&sourceid=chrome&ie=UTF-8"
     webbrowser.open_new(url)
-
+def search(query):
+    url = "https://www.google.com/search?q=" + query
+    webbrowser.open_new(url)
 def volume(value):
-    # TODO might have to adjust for OS sensitivity
     if (platform.system() == 'Linux'):
         # Linux
         call(["amixer", "-D", "pulse", "sset", "Master", str(value) + "%"])
@@ -87,11 +88,14 @@ def volume(value):
         volume.SetMasterVolume(value, None)
     else:
         warnings.warn("ERROR: OS cannot be determined")
-
+def volume_up(sens = 1):
+    volume(1 * sens)
+def volume_down(sens = 1):
+    volume(-1 * sens)
 def keypress(key, mode='tap'):
     """
     Key press control function
-    modes = 
+    modes =
         tap, immediately press and release
         hold, simulate a key press
         release, simulate a key release
@@ -109,7 +113,7 @@ def keypress(key, mode='tap'):
 def mousepress(button, mode='tap'):
     """
     Mouse click control function
-    modes = 
+    modes =
         tap, immediately click and release
         hold, simulate a mouse click
         release, simulate a mouse release
@@ -117,7 +121,7 @@ def mousepress(button, mode='tap'):
         double, double click mouse button, buttom param as (key, how many times)
     """
     mouse = Mouse_Controller()
-    
+
     if (mode == 'tap'):
         mouse.press(button)
         mouse.release(button)
@@ -129,14 +133,10 @@ def mousepress(button, mode='tap'):
         mouse.scroll(button[0], button[1])
     elif (mode == 'double'):
         mouse.click(button[0], button[1])
-# Open Application... (Set up with parameter) 
+# Open Application... (Set up with parameter)
 if __name__ == "__main__":
     # take_picture()
     # screenshot()
     # open_browser()
     # check_weather()
     ...
-
-
-
-
