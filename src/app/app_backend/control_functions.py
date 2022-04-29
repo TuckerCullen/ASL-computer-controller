@@ -36,6 +36,12 @@ def screenshot():
     time = str(dt.datetime.now().strftime("%Y-%m-%d_%h:%m"))
     os.system(f"screencapture -P ~/Desktop/screenshot{time}.jpeg")
 
+def open_twitter():
+    """Opens twitter in default browser"""
+
+    url = 'https://twitter.com/home?lang=en'
+    webbrowser.open_new(url)
+
 def open_browser():
     """Opens google in default browser"""
 
@@ -51,6 +57,11 @@ def check_weather():
     url = "https://www.google.com/search?q=weather&oq=weather&aqs=chrome..69i57j0i67l2j46i20i199i263i433i465i512j69i60l2j69i61j69i60.5279j1j7&sourceid=chrome&ie=UTF-8"
     webbrowser.open_new(url)
 
+def sleep():
+    "makes the computer go to sleep"
+
+    os.system("pmset sleepnow")
+
 
 if __name__ == "__main__":
 
@@ -58,6 +69,7 @@ if __name__ == "__main__":
     # screenshot()
     # open_browser()
     # check_weather()
+    # sleep()
     ...
 
 
