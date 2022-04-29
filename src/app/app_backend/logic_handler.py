@@ -4,9 +4,11 @@ from control_functions import *
 
 ACTION_LOOKUP = {
 	22: "Check Weather", 
-	25 : "Take Screenshot", #actually sign for number 4
-	29 : "Take Picture", # actually the sign for number 2
-	31 : "Open Browser" 
+	101 : "Take Screenshot", 
+	101 : "Take Picture",
+	85 : "Open Browser",
+	5 : "Open Twitter",
+	66 : "Go Dark / Sleep"
 }
 
 class LogicHandler:
@@ -52,6 +54,13 @@ class LogicHandler:
 
 		if cur_action == "Open Browser":
 			control_functions.open_browser()
+
+		if cur_action == "Open Twitter":
+			control_functions.open_twitter()
+		
+		if cur_action == "Go Dark / Sleep":
+			control_functions.sleep()
+
 
 		action_log.append(cur_action)
 	
