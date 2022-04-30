@@ -277,4 +277,4 @@ if __name__ == "__main__":
     # take_picture()
     # screenshot()
     # open_browser()
-    # check_weather()
+    check_weather()
