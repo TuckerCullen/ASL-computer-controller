@@ -3,12 +3,22 @@ import control_functions
 from control_functions import *
 
 ACTION_LOOKUP = {
-	22: "Check Weather", 
+	# Most consistantly classified funcs:
+	22: "Check Weather (gloss: Weather)" , 
+	85 : "Open Browser (gloss: Open)",
+	5 : "Open Twitter (gloss: Bird)",
+	66 : "Sleep (gloss: Dark)",
+	
+	# less consistantly classfified 
+	13 : "Volume Up (gloss: Loud)",
+	68 : "Volume Down (gloss: Down)",
+
+	# not totally working
+	4 : "Quit (gloss: Cancel)", 
+
+	# no mapping function yet: 
 	101 : "Take Screenshot", 
 	101 : "Take Picture",
-	85 : "Open Browser",
-	5 : "Open Twitter",
-	66 : "Go Dark / Sleep"
 }
 
 class LogicHandler:
@@ -49,18 +59,26 @@ class LogicHandler:
 		if cur_action == "Take Screenshot":
 			control_functions.screenshot()
 		
-		if cur_action == "Check Weather":
+		if cur_action == "Check Weather (gloss: Weather)":
 			control_functions.check_weather()
 
-		if cur_action == "Open Browser":
+		if cur_action == "Open Browser (gloss: Open)":
 			control_functions.open_browser()
 
-		if cur_action == "Open Twitter":
+		if cur_action == "Open Twitter (gloss: Bird)":
 			control_functions.open_twitter()
 		
-		if cur_action == "Go Dark / Sleep":
+		if cur_action == "Sleep (gloss: Dark)":
 			control_functions.sleep()
 
+		if cur_action == "Volume Up / Loud":
+			control_functions.volume(direction="UP")
+
+		if cur_action == "Volume Down (gloss: Down)":
+			control_functions.volume(direction="DOWN")
+
+		if cur_action == "Quit (gloss: Cancel)":
+			control_functions.cancel()
 
 		action_log.append(cur_action)
 	
