@@ -1,4 +1,4 @@
-data/
+
 .DS_Store
 
 train.csv
@@ -132,3 +132,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# I3D
+src/ML_models/I3D/data
+src/ML_models/I3D/archived
+src/ML_models/I3D/weights
